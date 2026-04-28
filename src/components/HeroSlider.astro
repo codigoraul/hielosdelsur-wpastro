@@ -1,0 +1,166 @@
+---
+const slides = [
+  {
+    image: '/slider/slider-2.jpg',
+    position: '50% 100%',
+    title: 'Más de 20 años',
+    subtitle: 'EQUIPANDO CHILE',
+    description: 'Sillas, taburetes, mesas y sillones para cada proyecto.',
+    cta: { label: 'Proyectos Realizados', href: '/proyectos' },
+  },
+  {
+    image: '/slider/slider-1.jpg',
+    position: 'center',
+    title: 'Bienvenidos a',
+    subtitle: 'HIELOS DEL SUR',
+    description: 'Mobiliario de calidad para restaurantes y espacios gastronómicos.',
+    cta: { label: 'Ver Catálogo', href: '/catalogo' },
+  },
+  {
+    image: '/slider/slider-3.jpg',
+    position: 'center',
+    title: 'Calidad y diseño',
+    subtitle: 'PARA TU NEGOCIO',
+    description: 'Solicita tu cotización y asesoría personalizada.',
+    cta: { label: 'Contáctanos', href: '/contacto' },
+  },
+];
+---
+
+<section style="position:relative; width:100%; height:610px; overflow:hidden" id="hero-slider">
+
+  <!-- Slides -->
+  {slides.map((slide, i) => (
+    <div
+      class={`slide absolute inset-0 transition-opacity duration-1000 ${i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+      data-index={i}
+    >
+      <!-- Imagen de fondo -->
+      <div
+        class="absolute inset-0 bg-cover scale-105 transition-transform duration-[8000ms]"
+        style={`background-image: url('${slide.image}'); background-position: ${slide.position}`}
+      ></div>
+
+      <!-- Overlay oscuro gradiente -->
+      <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+
+      <!-- Contenido -->
+      <div class="relative z-10 h-full flex items-center w-full">
+        <div style="max-width:1280px;width:100%;margin:0 auto;padding:0 4rem">
+          <p class="text-[#c8a96e] text-xs md:text-sm font-semibold tracking-[0.3em] uppercase mb-3 opacity-0 slide-tag">
+            {slide.title}
+          </p>
+          <h2 class="text-3xl md:text-5xl lg:text-6xl text-white font-extrabold leading-tight mb-4 opacity-0 slide-title tracking-tight">
+            {slide.subtitle}
+          </h2>
+          <p class="text-stone-300 text-sm md:text-base max-w-md mb-8 opacity-0 slide-desc">
+            {slide.description}
+          </p>
+          <a
+            href={slide.cta.href}
+            class="inline-flex items-center gap-2 bg-[#8B7355] hover:bg-[#7a6347] text-white text-xs font-bold tracking-widest uppercase px-7 py-4 transition-colors opacity-0 slide-cta"
+          >
+            {slide.cta.label}
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  ))}
+
+  <!-- Controles flechas -->
+  <button id="prev-btn" class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-white/30 bg-black/20 backdrop-blur-sm text-white hover:bg-[#8B7355] hover:border-[#8B7355] transition-all flex items-center justify-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+  <button id="next-btn" class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-white/30 bg-black/20 backdrop-blur-sm text-white hover:bg-[#8B7355] hover:border-[#8B7355] transition-all flex items-center justify-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+
+  <!-- Dots -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+    {slides.map((_, i) => (
+      <button
+        class={`dot w-2 h-2 rounded-full transition-all duration-300 ${i === 0 ? 'bg-white w-8' : 'bg-white/40'}`}
+        data-dot={i}
+      ></button>
+    ))}
+  </div>
+
+  <!-- Línea de progreso -->
+  <div class="absolute bottom-0 left-0 h-0.5 bg-[#8B7355] z-20" id="progress-bar" style="width:0%"></div>
+</section>
+
+<style>
+  .slide.active .slide-tag  { animation: fadeUp 0.7s 0.2s ease forwards; }
+  .slide.active .slide-title { animation: fadeUp 0.7s 0.4s ease forwards; }
+  .slide.active .slide-desc  { animation: fadeUp 0.7s 0.6s ease forwards; }
+  .slide.active .slide-cta   { animation: fadeUp 0.7s 0.8s ease forwards; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  const slides     = document.querySelectorAll('.slide');
+  const dots       = document.querySelectorAll('.dot');
+  const progress   = document.getElementById('progress-bar') as HTMLElement;
+  const DURATION   = 5000;
+  let current      = 0;
+  let timer: ReturnType<typeof setInterval>;
+  let progTimer: ReturnType<typeof setInterval>;
+
+  function goTo(index: number) {
+    slides[current].classList.remove('opacity-100', 'z-10', 'active');
+    slides[current].classList.add('opacity-0', 'z-0');
+    dots[current].classList.remove('bg-white', 'w-8');
+    dots[current].classList.add('bg-white/40');
+
+    current = (index + slides.length) % slides.length;
+
+    slides[current].classList.remove('opacity-0', 'z-0');
+    slides[current].classList.add('opacity-100', 'z-10', 'active');
+    dots[current].classList.remove('bg-white/40');
+    dots[current].classList.add('bg-white', 'w-8');
+
+    startProgress();
+  }
+
+  function startProgress() {
+    if (progress) progress.style.width = '0%';
+    clearInterval(progTimer);
+    let elapsed = 0;
+    progTimer = setInterval(() => {
+      elapsed += 50;
+      if (progress) progress.style.width = `${(elapsed / DURATION) * 100}%`;
+      if (elapsed >= DURATION) clearInterval(progTimer);
+    }, 50);
+  }
+
+  function startAuto() {
+    clearInterval(timer);
+    timer = setInterval(() => goTo(current + 1), DURATION);
+  }
+
+  // Init
+  slides[0].classList.add('active');
+  startProgress();
+  startAuto();
+
+  document.getElementById('next-btn')?.addEventListener('click', () => {
+    goTo(current + 1); startAuto();
+  });
+  document.getElementById('prev-btn')?.addEventListener('click', () => {
+    goTo(current - 1); startAuto();
+  });
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => { goTo(i); startAuto(); });
+  });
+</script>

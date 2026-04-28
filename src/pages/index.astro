@@ -1,17 +1,76 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import HeroSlider from '../components/HeroSlider.astro';
 
+const categorias = [
+  { label: 'Sillas',    href: '/catalogo/sillas',    img: 'https://hielosdelsur.cl/clon/wp-content/uploads/2018/10/516-SILLA-HS-516.jpg' },
+  { label: 'Sillones',  href: '/catalogo/sillones',  img: 'https://hielosdelsur.cl/clon/wp-content/uploads/2018/10/517-HS-517.jpg' },
+  { label: 'Taburetes', href: '/catalogo/taburetes', img: 'https://hielosdelsur.cl/clon/wp-content/uploads/2018/10/518-SILLA-NIÑOS-HS-518.jpg' },
+  { label: 'Mesas',     href: '/catalogo/mesas',     img: 'https://hielosdelsur.cl/clon/wp-content/uploads/2018/10/517-HS-517.jpg' },
+  { label: 'Bancas',    href: '/catalogo/bancas',    img: 'https://hielosdelsur.cl/clon/wp-content/uploads/2018/10/516-SILLA-HS-516.jpg' },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Hielos del Sur — Mobiliario para Restaurantes">
+
+  <!-- Hero Slider -->
+  <HeroSlider />
+
+  <!-- Categorías destacadas -->
+  <section style="padding:5rem 0; background:#F5F5F3">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-label">Nuestro catálogo</span>
+        <h2 class="sec-title">Líneas de producto</h2>
+      </div>
+      <div class="cats-grid">
+        {categorias.map(cat => (
+          <a href={cat.href} class="cat-item">
+            <img src={cat.img} alt={cat.label} />
+            <div class="cat-overlay"></div>
+            <span class="cat-name">{cat.label}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Por qué elegirnos -->
+  <section style="padding:5rem 0; background:#ffffff">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-label">Nuestra diferencia</span>
+        <h2 class="sec-title">¿Por qué Hielos del Sur?</h2>
+      </div>
+      <div class="why-grid">
+        {[
+          { icon: '🏆', title: '+20 años de experiencia', desc: 'Equipando los mejores restaurantes, hoteles y espacios gastronómicos de Chile.' },
+          { icon: '✅', title: 'Garantía 1 año', desc: 'Todos nuestros productos cuentan con garantía de fábrica y respaldo técnico.' },
+          { icon: '🚚', title: 'Despacho a todo Chile', desc: 'Coordinamos la entrega de tu pedido en todo el territorio nacional.' },
+        ].map(item => (
+          <div class="why-card">
+            <div class="why-icon">{item.icon}</div>
+            <h3>{item.title}</h3>
+            <p>{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA contacto -->
+  <section style="padding:5rem 0; background:#1C1C1C">
+    <div class="cta-inner">
+      <span class="cta-label">¿Tienes un proyecto?</span>
+      <h2 class="sec-title-white">Hablemos de tu próximo espacio</h2>
+      <p class="cta-desc">Cotiza sin compromiso. Te asesoramos para encontrar el mobiliario ideal para tu restaurante, hotel o espacio gastronómico.</p>
+      <a href="/contacto" class="btn-accent">
+        Solicitar cotización
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+
+</Layout>

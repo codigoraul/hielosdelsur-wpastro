@@ -1,0 +1,119 @@
+---
+const navItems = [
+  { label: 'Catálogo', href: '/catalogo', hasDropdown: true },
+  { label: 'Trabajos Realizados', href: '/trabajos' },
+  { label: 'Proyectos Realizados', href: '/proyectos' },
+  { label: 'Clientes', href: '/clientes' },
+  { label: 'Nosotros', href: '/nosotros' },
+  { label: 'Contacto', href: '/contacto' },
+];
+
+const catalogItems = [
+  { label: 'Sillas', href: '/catalogo/sillas' },
+  { label: 'Sillones', href: '/catalogo/sillones' },
+  { label: 'Taburetes', href: '/catalogo/taburetes' },
+  { label: 'Mesas', href: '/catalogo/mesas' },
+  { label: 'Bancas', href: '/catalogo/bancas' },
+];
+---
+
+<header class="w-full z-50 sticky top-0 shadow-sm">
+
+  <!-- Topbar -->
+  <div style="background:#1C1C1C; color:white; font-size:0.75rem; padding:0.5rem 1.5rem">
+    <div class="wrap" style="display:flex; align-items:center; justify-content:space-between">
+      <a href="mailto:contacto@hielosdelsur.cl" class="flex items-center gap-2 hover:text-stone-300 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        contacto@hielosdelsur.cl
+      </a>
+      <div class="flex items-center gap-5">
+        <a href="https://instagram.com" target="_blank" class="hover:text-stone-300 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+          </svg>
+        </a>
+        <span class="flex items-center gap-1.5 text-stone-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Santa Margarita 0487 — San Bernardo | Chile
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav principal -->
+  <div style="background:#fff; border-bottom:1px solid #f0ede8">
+    <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; height:5rem">
+
+      <!-- Logo -->
+      <a href="/" class="flex-shrink-0">
+        <img src="/hielos-de-sur.png" alt="Hielos del Sur" class="h-14 w-auto object-contain" />
+      </a>
+
+      <!-- Nav desktop -->
+      <nav style="display:flex; align-items:center; gap:0.25rem">
+        {navItems.map((item) => (
+          item.hasDropdown ? (
+            <div class="nav-parent" style="position:relative">
+              <button style="display:flex; align-items:center; gap:4px; padding:0.5rem 0.25rem; font-size:0.7rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#57534e; background:none; border:none; cursor:pointer; white-space:nowrap" class="hover:text-[#8B7355] transition-colors">
+                {item.label}
+                <svg xmlns="http://www.w3.org/2000/svg" class="nav-chevron" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div class="nav-dropdown" style="position:absolute; top:100%; left:0; width:200px; background:#fff; border:1px solid #e7e5e4; box-shadow:0 10px 30px rgba(0,0,0,0.12); border-radius:0 0 8px 8px; z-index:50; overflow:hidden">
+                {catalogItems.map((cat) => (
+                  <a href={cat.href} style="display:block; padding:0.75rem 1.25rem; font-size:0.7rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#57534e; text-decoration:none; border-bottom:1px solid #f5f5f4; transition:background 0.15s, color 0.15s"
+                    onmouseover="this.style.background='#F7F5F2';this.style.color='#8B7355'"
+                    onmouseout="this.style.background='';this.style.color='#57534e'">
+                    {cat.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <a href={item.href} style="padding:0.5rem 0.25rem; font-size:0.7rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#57534e; text-decoration:none; white-space:nowrap" class="hover:text-[#8B7355] transition-colors">
+              {item.label}
+            </a>
+          )
+        ))}
+      </nav>
+
+      <!-- Hamburger mobile -->
+      <button id="menu-btn" class="lg:hidden p-2 text-stone-700" aria-label="Abrir menú">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Nav mobile -->
+  <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-stone-100 shadow-lg">
+    <div class="wrap py-4 flex flex-col gap-1">
+      {navItems.map((item) => (
+        <a href={item.href} class="py-3 text-sm font-semibold tracking-wider uppercase text-stone-600 border-b border-stone-100 hover:text-[#8B7355] transition-colors">
+          {item.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav-dropdown { display: none; }
+  .nav-parent:hover .nav-dropdown { display: block; }
+  .nav-dropdown a:hover { background: #F7F5F2; color: #8B7355; }
+  .nav-chevron { transition: transform 0.2s; }
+  .nav-parent:hover .nav-chevron { transform: rotate(180deg); }
+</style>
+
+<script>
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+</script>
