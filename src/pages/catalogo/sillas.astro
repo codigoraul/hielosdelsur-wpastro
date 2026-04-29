@@ -3,8 +3,8 @@ import Layout from '../../layouts/Layout.astro';
 import CatalogGrid from '../../components/CatalogGrid.jsx';
 import { getProductos } from '../../lib/wordpress.js';
 
-const productos = await getProductos();
-const filtros = ['Metálicas', 'Plásticas', 'Tapizadas', 'Taburetes', 'Madera'];
+const productos = await getProductos('sillas');
+const filtros = ['Metálicas', 'Plásticas', 'Tapizadas', 'Madera'];
 ---
 
 <Layout title="Sillas — Hielos del Sur">

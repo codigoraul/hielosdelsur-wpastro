@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import CatalogGrid from '../../components/CatalogGrid.jsx';
 import { getProductos } from '../../lib/wordpress.js';
 
-const productos = await getProductos();
+const productos = await getProductos('taburetes');
 const filtros = ['Metálicos', 'Madera', 'Tapizados', 'Con Respaldo', 'Sin Respaldo'];
 ---
 

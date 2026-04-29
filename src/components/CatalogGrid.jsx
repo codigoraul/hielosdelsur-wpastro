@@ -1,8 +1,24 @@
 import { useState, useRef, useEffect } from 'react';
 
-const COLS = 3;
+function useCols() {
+  const [cols, setCols] = useState(6);
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      if (w >= 1024)      setCols(6);
+      else if (w >= 768)  setCols(4);
+      else if (w >= 480)  setCols(3);
+      else                setCols(2);
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+  return cols;
+}
 
 export default function CatalogGrid({ productos = [], filtros = [] }) {
+  const COLS = useCols();
   const [filtroActivo, setFiltroActivo] = useState('todas');
   const [productoActivo, setProductoActivo] = useState(null);
   const panelRef = useRef(null);
@@ -92,7 +108,7 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
                     position: 'relative',
                     overflow: 'hidden',
                     background: '#FAFAFA',
-                    aspectRatio: '4/3',
+                    aspectRatio: '155/208',
                     borderRadius: '2px',
                   }}>
                     {producto.imagen && (
@@ -131,8 +147,8 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
                   </div>
                   {/* Título */}
                   <p style={{
-                    marginTop: '0.75rem',
-                    fontSize: '0.85rem',
+                    marginTop: '0.5rem',
+                    fontSize: '0.72rem',
                     fontWeight: '600',
                     color: '#1c1917',
                   }}>
@@ -161,8 +177,8 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
               >
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: '55% 45%',
-                  minHeight: '660px',
+                  gridTemplateColumns: COLS <= 2 ? '1fr' : '55% 45%',
+                  minHeight: COLS <= 2 ? 'auto' : '660px',
                 }}>
                   {/* Imagen grande */}
                   <div style={{
