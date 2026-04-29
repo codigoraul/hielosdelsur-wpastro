@@ -1,13 +1,9 @@
 const WP_URL = 'http://localhost:10053';
 
-// Cache de términos para no hacer múltiples requests
-let _termCache = null;
 async function getTerms() {
-  if (_termCache) return _termCache;
   const res = await fetch(`${WP_URL}/wp-json/wp/v2/categorias-producto?per_page=100`);
   if (!res.ok) return [];
-  _termCache = await res.json();
-  return _termCache;
+  return res.json();
 }
 
 // Obtiene el ID de un término por su slug
@@ -31,7 +27,7 @@ export async function getProductos(categoriaSlug = '') {
     per_page: '100',
     orderby: 'id',
     order: 'asc',
-    _fields: 'id,slug,title,meta,imagen_url,categorias-producto',
+    _fields: 'id,slug,title,meta,imagen_url,galeria_urls,categorias-producto',
     ...(termId && { 'categorias-producto': termId }),
   });
 
@@ -43,7 +39,7 @@ export async function getProductos(categoriaSlug = '') {
     const termIds = p['categorias-producto'] || [];
 
     // Subcategoría = cualquier término que no sea la categoría principal de página
-    const mainSlugs = ['sillas', 'sillones', 'taburetes', 'mesas', 'bancas'];
+    const mainSlugs = ['sillas', 'sillones', 'mesas', 'bancas'];
     const subterm = termIds
       .map(id => termMap[id])
       .filter(t => t && !mainSlugs.includes(t.slug))[0];
@@ -64,10 +60,7 @@ export async function getProductos(categoriaSlug = '') {
         try { return JSON.parse(p.meta?.caracteristicas || '[]'); }
         catch { return []; }
       })(),
-      galeria: (() => {
-        try { return JSON.parse(p.meta?.galeria || '[]'); }
-        catch { return []; }
-      })(),
+      galeria: p.galeria_urls || [],
     };
   });
 }

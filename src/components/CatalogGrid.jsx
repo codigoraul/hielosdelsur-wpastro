@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 function useCols() {
   const [cols, setCols] = useState(6);
@@ -20,12 +20,28 @@ function useCols() {
 export default function CatalogGrid({ productos = [], filtros = [] }) {
   const COLS = useCols();
   const [filtroActivo, setFiltroActivo] = useState('todas');
+  const [filtroVisible, setFiltroVisible] = useState('todas');
+  const [animKey, setAnimKey] = useState(0);
+  const [saliendo, setSaliendo] = useState(false);
   const [productoActivo, setProductoActivo] = useState(null);
+  const [imgActiva, setImgActiva] = useState(null);
   const panelRef = useRef(null);
 
-  const filtrados = filtroActivo === 'todas'
+  const cambiarFiltro = useCallback((f) => {
+    if (f === filtroActivo) return;
+    setSaliendo(true);
+    setProductoActivo(null);
+    setTimeout(() => {
+      setFiltroVisible(f);
+      setFiltroActivo(f);
+      setAnimKey(k => k + 1);
+      setSaliendo(false);
+    }, 220);
+  }, [filtroActivo]);
+
+  const filtrados = filtroVisible === 'todas'
     ? productos
-    : productos.filter(p => p.categoria === filtroActivo);
+    : productos.filter(p => p.categoria === filtroVisible);
 
   // Calcular en qué fila está el producto activo
   const idxActivo = productoActivo
@@ -36,8 +52,10 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
   const handleClick = (producto) => {
     if (productoActivo?.id === producto.id) {
       setProductoActivo(null);
+      setImgActiva(null);
     } else {
       setProductoActivo(producto);
+      setImgActiva(producto.imagen);
     }
   };
 
@@ -69,7 +87,7 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
               <span style={{ color: '#ccc', margin: '0 0.6rem', fontWeight: '300' }}>/</span>
             )}
             <button
-              onClick={() => { setFiltroActivo(f); setProductoActivo(null); }}
+              onClick={() => cambiarFiltro(f)}
               style={{
                 background: 'none', border: 'none', cursor: 'pointer',
                 fontSize: '0.72rem', fontWeight: filtroActivo === f ? '800' : '500',
@@ -87,7 +105,11 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
       </div>
 
       {/* Grid por filas */}
-      <div>
+      <div style={{
+        transition: 'opacity 0.18s ease, transform 0.18s ease',
+        opacity: saliendo ? 0 : 1,
+        transform: saliendo ? 'translateX(-18px)' : 'translateX(0)',
+      }}>
         {filas.map((fila, filaIdx) => (
           <div key={filaIdx}>
             {/* Fila de productos */}
@@ -97,11 +119,17 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
               gap: '1.5rem',
               marginBottom: filaActiva === filaIdx ? 0 : '1.5rem',
             }}>
-              {fila.map(producto => (
+              {fila.map((producto, itemIdx) => {
+                const globalIdx = filaIdx * COLS + itemIdx;
+                return (
                 <div
-                  key={producto.id}
+                  key={`${animKey}-${producto.id}`}
                   onClick={() => handleClick(producto)}
-                  style={{ cursor: 'pointer' }}
+                  style={{
+                    cursor: 'pointer',
+                    animation: `itemEntrada 0.4s cubic-bezier(0.25,0.46,0.45,0.94) both`,
+                    animationDelay: `${globalIdx * 40}ms`,
+                  }}
                 >
                   {/* Imagen — sin borde, fondo gris claro */}
                   <div style={{
@@ -155,7 +183,8 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
                     {producto.titulo}
                   </p>
                 </div>
-              ))}
+                );
+              })}
               {/* Rellenar espacios vacíos en última fila */}
               {fila.length < COLS && Array.from({ length: COLS - fila.length }).map((_, i) => (
                 <div key={`empty-${i}`} />
@@ -180,18 +209,50 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
                   gridTemplateColumns: COLS <= 2 ? '1fr' : '55% 45%',
                   minHeight: COLS <= 2 ? 'auto' : '660px',
                 }}>
-                  {/* Imagen grande */}
+                  {/* Imagen grande + galería */}
                   <div style={{
                     background: '#FAFAFA',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    padding: '1.5rem',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    padding: '1.5rem', gap: '1rem',
                   }}>
-                    {productoActivo.imagen && (
+                    {/* Imagen principal */}
+                    {(imgActiva || productoActivo.imagen) && (
                       <img
-                        src={productoActivo.imagen}
+                        src={imgActiva || productoActivo.imagen}
                         alt={productoActivo.titulo}
-                        style={{ width: '100%', height: '100%', objectFit: 'contain', maxHeight: '620px' }}
+                        style={{ width: '100%', objectFit: 'contain', maxHeight: '520px', transition: 'opacity 0.25s' }}
                       />
+                    )}
+                    {/* Miniaturas galería */}
+                    {productoActivo.galeria?.length > 0 && (
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {/* Miniatura imagen principal */}
+                        {productoActivo.imagen && (
+                          <img
+                            src={productoActivo.imagen}
+                            alt="principal"
+                            onClick={() => setImgActiva(productoActivo.imagen)}
+                            style={{
+                              width: '60px', height: '60px', objectFit: 'cover', cursor: 'pointer',
+                              border: imgActiva === productoActivo.imagen || (!imgActiva)
+                                ? '2px solid #8B7355' : '2px solid transparent',
+                              borderRadius: '2px', transition: 'border 0.2s',
+                            }}
+                          />
+                        )}
+                        {/* Miniaturas adicionales */}
+                        {productoActivo.galeria.map((url, i) => (
+                          <img
+                            key={i} src={url} alt={`foto ${i+2}`}
+                            onClick={() => setImgActiva(url)}
+                            style={{
+                              width: '60px', height: '60px', objectFit: 'cover', cursor: 'pointer',
+                              border: imgActiva === url ? '2px solid #8B7355' : '2px solid transparent',
+                              borderRadius: '2px', transition: 'border 0.2s',
+                            }}
+                          />
+                        ))}
+                      </div>
                     )}
                   </div>
 
@@ -283,6 +344,16 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
         @keyframes panelSlide {
           from { opacity: 0; transform: translateY(-12px); }
           to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes itemEntrada {
+          from {
+            opacity: 0;
+            transform: perspective(600px) rotateY(-55deg) translateX(30px);
+          }
+          to {
+            opacity: 1;
+            transform: perspective(600px) rotateY(0deg) translateX(0);
+          }
         }
       `}</style>
     </div>
