@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+---
+
+<Layout title="Nosotros — Hielos del Sur">
+
+  <PageHero titulo="Nosotros" imagen="/slider/slider-1.jpg" />
+
+  <section style="padding:5rem 0; background:#FAFAFA">
+    <div class="wrap">
+
+      <div class="nosotros-grid">
+
+        <!-- Imagen -->
+        <div class="nosotros-img">
+          <img src="/slider/slider-2.jpg" alt="Hielos del Sur" />
+        </div>
+
+        <!-- Texto -->
+        <div class="nosotros-texto">
+          <span class="sec-label">Acerca de nuestra empresa</span>
+          <h2 class="sec-title" style="margin-bottom:1.5rem">Quiénes somos</h2>
+
+          <p>Con más de <strong>25 años de trayectoria</strong>, somos una de las <strong>principales fábricas de insumos y equipamiento gastronómico</strong> del mercado. Con el foco puesto en la creación, diseño y desarrollo, producimos mesas, sillas y todo el mobiliario necesario <strong>para Food Courts, Comedores, Instituciones Educativas y Mobiliario Urbano.</strong></p>
+
+          <p>Escuchamos a nuestros clientes y nos convertimos en sus socios colaborando a alcanzar sus objetivos comerciales y necesidades, <strong>creando líneas de diseño que los hagan destacarse</strong> con un producto único e inigualable.</p>
+
+          <p>Contamos con el Know How y la experiencia necesaria para poder adelantarnos a los acontecimientos y estar siempre a la vanguardia en diseños, modelos, colores y materiales, otorgando una inminente ventaja en la garantía, stock y reposición.</p>
+
+          <a href="/contacto" class="btn-accent" style="margin-top:2rem; display:inline-flex; align-items:center; gap:0.5rem">
+            Contáctanos
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+  .nosotros-grid {
+    display: grid;
+    grid-template-columns: 38% 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .nosotros-img img {
+    width: 100%;
+    height: 480px;
+    object-fit: cover;
+    border-radius: 2px;
+  }
+
+  .nosotros-texto p {
+    font-size: 0.92rem;
+    color: #57534e;
+    line-height: 1.85;
+    margin-bottom: 1.1rem;
+  }
+
+  .nosotros-texto strong {
+    color: #1c1917;
+    font-weight: 700;
+  }
+
+  @media (max-width: 768px) {
+    .nosotros-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .nosotros-img img {
+      height: 280px;
+    }
+  }
+</style>

@@ -1,5 +1,48 @@
 const WP_URL = 'http://localhost:10053';
 
+// Obtener datos de Yoast SEO para una página
+export async function getYoastSEO(slug) {
+  try {
+    const res = await fetch(`${WP_URL}/wp-json/wp/v2/pages?slug=${slug}&_fields=yoast_head_json`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || data.length === 0) return null;
+    return data[0].yoast_head_json || null;
+  } catch (error) {
+    console.error('Error fetching Yoast SEO:', error);
+    return null;
+  }
+}
+
+// Obtener datos de Yoast SEO desde un producto específico
+export async function getYoastSEOFromProduct(slug) {
+  try {
+    const res = await fetch(`${WP_URL}/wp-json/wp/v2/productos?slug=${slug}&_fields=yoast_head_json`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || data.length === 0) return null;
+    return data[0].yoast_head_json || null;
+  } catch (error) {
+    console.error('Error fetching Yoast SEO from product:', error);
+    return null;
+  }
+}
+
+// Obtener Yoast SEO para categoría de productos (taxonomy)
+export async function getYoastSEOFromCategory(categorySlug) {
+  try {
+    // Primero obtener el término de la categoría
+    const termRes = await fetch(`${WP_URL}/wp-json/wp/v2/categorias-producto?slug=${categorySlug}&_fields=yoast_head_json,id`);
+    if (!termRes.ok) return null;
+    const terms = await termRes.json();
+    if (!terms || terms.length === 0) return null;
+    return terms[0].yoast_head_json || null;
+  } catch (error) {
+    console.error('Error fetching Yoast SEO from category:', error);
+    return null;
+  }
+}
+
 async function getTerms() {
   const res = await fetch(`${WP_URL}/wp-json/wp/v2/categorias-producto?per_page=100`);
   if (!res.ok) return [];
@@ -10,6 +53,55 @@ async function getTerms() {
 async function getTermId(slug) {
   const terms = await getTerms();
   return terms.find(t => t.slug === slug)?.id || null;
+}
+
+export async function getGaleria(tipoSlug = '', catSlug = '') {
+  const tipoRes = await fetch(`${WP_URL}/wp-json/wp/v2/galeria-tipo?slug=${tipoSlug}&per_page=1`);
+  const tipos   = tipoRes.ok ? await tipoRes.json() : [];
+  const tipoId  = tipos[0]?.id || null;
+  if (!tipoId) return { items: [], categorias: [] };
+
+  // Todas las categorías del tipo
+  const catRes = await fetch(`${WP_URL}/wp-json/wp/v2/galeria-cat?per_page=100`);
+  const cats   = catRes.ok ? await catRes.json() : [];
+
+  // Paginar para traer todos (WP máx 100 por página)
+  let data = [], page = 1;
+  while (true) {
+    const params = new URLSearchParams({
+      per_page: '100', page: String(page), orderby: 'date', order: 'asc',
+      _fields: 'id,title,imagen_url,galeria-tipo,galeria-cat,meta',
+      'galeria-tipo': tipoId,
+    });
+    const res = await fetch(`${WP_URL}/wp-json/wp/v2/galeria?${params}`);
+    if (!res.ok) break;
+    const batch = await res.json();
+    if (!Array.isArray(batch) || batch.length === 0) break;
+    data = data.concat(batch);
+    if (batch.length < 100) break;
+    page++;
+  }
+
+  const catMap = Object.fromEntries(cats.map(c => [c.id, c]));
+
+  const items = data.map(p => {
+    const catIds = p['galeria-cat'] || [];
+    const cat    = catIds.map(id => catMap[id]).find(c => c) || null;
+    return {
+      id:          p.id,
+      titulo:      p.title?.rendered || '',
+      imagen:      p.imagen_url || '',
+      categoria:   cat?.name || '',
+      catSlug:     cat?.slug || '',
+      descripcion: p.meta?.descripcion || '',
+      anio:        p.meta?.anio || '',
+      cliente:     p.meta?.cliente || '',
+    };
+  });
+
+  const categorias = cats.filter(c => items.some(i => i.catSlug === c.slug));
+
+  return { items, categorias };
 }
 
 export async function getProductos(categoriaSlug = '') {

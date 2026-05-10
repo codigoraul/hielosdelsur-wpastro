@@ -1,17 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HeroSlider from '../components/HeroSlider.astro';
+import { getYoastSEO } from '../lib/wordpress.js';
+
+// Obtener datos de Yoast SEO para la página de inicio
+const yoastData = await getYoastSEO('inicio');
 
 const categorias = [
-  { label: 'Sillas',    href: '/catalogo/sillas',    img: 'https://hielosdelsur.cl/clon/wp-content/uploads/2018/10/516-SILLA-HS-516.jpg' },
-  { label: 'Sillones',  href: '/catalogo/sillones',  img: 'https://hielosdelsur.cl/clon/wp-content/uploads/2018/10/517-HS-517.jpg' },
-  { label: 'Taburetes', href: '/catalogo/taburetes', img: 'https://hielosdelsur.cl/clon/wp-content/uploads/2018/10/518-SILLA-NIÑOS-HS-518.jpg' },
-  { label: 'Mesas',     href: '/catalogo/mesas',     img: 'https://hielosdelsur.cl/clon/wp-content/uploads/2018/10/517-HS-517.jpg' },
-  { label: 'Bancas',    href: '/catalogo/bancas',    img: 'https://hielosdelsur.cl/clon/wp-content/uploads/2018/10/516-SILLA-HS-516.jpg' },
+  { label: 'Sillas',    href: '/catalogo/sillas',    img: '/images/sillas.jpg',    light: true },
+  { label: 'Sillones',  href: '/catalogo/sillones',  img: '/images/sillones.jpg',  light: true },
+  { label: 'Taburetes', href: '/catalogo/taburetes', img: '/images/taburetes.jpg', light: true },
+  { label: 'Mesas y Bases', href: '/catalogo/mesas', img: '/images/mesas-y-bases.jpg', light: true },
 ];
 ---
 
-<Layout title="Hielos del Sur — Mobiliario para Restaurantes">
+<Layout 
+  title="Hielos del Sur — Mobiliario para Restaurantes"
+  yoastData={yoastData}
+>
 
   <!-- Hero Slider -->
   <HeroSlider />
@@ -25,7 +31,7 @@ const categorias = [
       </div>
       <div class="cats-grid">
         {categorias.map(cat => (
-          <a href={cat.href} class="cat-item">
+          <a href={cat.href} class={`cat-item${cat.light ? ' cat-item--light' : ''}`}>
             <img src={cat.img} alt={cat.label} />
             <div class="cat-overlay"></div>
             <span class="cat-name">{cat.label}</span>
@@ -36,24 +42,118 @@ const categorias = [
   </section>
 
   <!-- Por qué elegirnos -->
-  <section style="padding:5rem 0; background:#ffffff">
+  <section class="servicios-section">
     <div class="wrap">
-      <div class="sec-head">
-        <span class="sec-label">Nuestra diferencia</span>
-        <h2 class="sec-title">¿Por qué Hielos del Sur?</h2>
-      </div>
-      <div class="why-grid">
+      <div class="servicios-grid">
         {[
-          { icon: '🏆', title: '+20 años de experiencia', desc: 'Equipando los mejores restaurantes, hoteles y espacios gastronómicos de Chile.' },
-          { icon: '✅', title: 'Garantía 1 año', desc: 'Todos nuestros productos cuentan con garantía de fábrica y respaldo técnico.' },
-          { icon: '🚚', title: 'Despacho a todo Chile', desc: 'Coordinamos la entrega de tu pedido en todo el territorio nacional.' },
+          {
+            img: 'https://hielosdelsur.cl/wp-content/uploads/2016/08/atencionper-e1504476990467.jpg',
+            title: 'ATENCIÓN PERSONALIZADA',
+            desc: 'Contamos con personal altamente capacitado brindando el mejor asesoramiento.',
+          },
+          {
+            img: 'https://hielosdelsur.cl/wp-content/uploads/2016/08/entrega-e1504477012196.jpg',
+            title: 'SERVICIO DE ENTREGA',
+            desc: 'Realizamos entregas e instalaciones en todo Chile.',
+          },
+          {
+            img: 'https://hielosdelsur.cl/wp-content/uploads/2018/10/surtido-e1504477034392.jpg',
+            title: 'SURTIDO Y STOCK',
+            desc: 'Disponemos de grandes superficies de fabricación y almacenamiento, simplificando la reposición.',
+          },
+          {
+            img: 'https://hielosdelsur.cl/wp-content/uploads/2016/08/trabajosespecial-e1504477057708.jpg',
+            title: 'TRABAJOS ESPECIALES',
+            desc: 'Nos especializamos en realizar proyectos especiales fuera del circuito comercial.',
+          },
         ].map(item => (
-          <div class="why-card">
-            <div class="why-icon">{item.icon}</div>
-            <h3>{item.title}</h3>
-            <p>{item.desc}</p>
+          <div class="servicio-card">
+            <img src={item.img} alt={item.title} class="servicio-img" style="width:120px;height:auto;" loading="lazy" />
+            <h3 class="servicio-title">{item.title}</h3>
+            <p class="servicio-desc">{item.desc}</p>
           </div>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Clientes -->
+  <section style="padding:4rem 0; background:#fff; overflow:hidden">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-label">Confían en nosotros</span>
+        <h2 class="sec-title">Clientes</h2>
+      </div>
+      <div class="logos-track-wrap">
+        <button class="logos-btn logos-prev" aria-label="Anterior">&#8249;</button>
+        <div class="logos-viewport">
+          <div class="logos-track" id="logosTrack">
+            {/* Página 1 — 12 logos */}
+            <div class="logos-page">
+              {[
+                { nombre: 'UNIACC',         img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/uniacc.jpg' },
+                { nombre: 'Tavelli',         img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/tavelli.jpg' },
+                { nombre: 'Subway',          img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/subway.jpg' },
+                { nombre: 'Santander',       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/santander.jpg' },
+                { nombre: 'Paseo Quilín',    img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/paseo-quilin.jpg' },
+                { nombre: 'Open Mall Plaza', img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/open-mall-plaza.jpg' },
+                { nombre: 'UC Católica',     img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/ucatolica.jpg' },
+                { nombre: 'Tarragona',       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/tarragona.jpg' },
+                { nombre: 'Sodexo',          img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/sodexo.jpg' },
+                { nombre: 'Pollo Stop',      img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/pollo-stop.jpg' },
+                { nombre: 'Parque Arauco',   img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/parquearauco.jpg' },
+                { nombre: 'Los Pelambres',   img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/minera-lospelambres-25.jpg' },
+              ].map(c => (
+                <div class="logo-item">
+                  <img src={c.img} alt={c.nombre} loading="lazy" />
+                </div>
+              ))}
+            </div>
+            {/* Página 2 — 12 logos */}
+            <div class="logos-page">
+              {[
+                { nombre: 'Minera Escondida', img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/minera-escondida.jpg' },
+                { nombre: 'BHP Billiton',     img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/minera-bhpbilliton.jpg' },
+                { nombre: 'Anglo American',   img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/minera-angloamerica.jpg' },
+                { nombre: "McDonald's",       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mcdonalds.jpg' },
+                { nombre: 'Mall Plaza',       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mallplaza.jpg' },
+                { nombre: 'Mall Sport',       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mall-sport.jpg' },
+                { nombre: 'Mall del Centro',  img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mall-del-centro.jpg' },
+                { nombre: 'Líder',            img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/lider.jpg' },
+                { nombre: 'Le Fournil',       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/LeFournil.jpg' },
+                { nombre: 'Latam',            img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/latam.jpg' },
+                { nombre: 'Indisa',           img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/indisa.jpg' },
+                { nombre: 'Inacap',           img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/inacap.jpg' },
+              ].map(c => (
+                <div class="logo-item">
+                  <img src={c.img} alt={c.nombre} loading="lazy" />
+                </div>
+              ))}
+            </div>
+            {/* Página 3 — 4 logos + 8 rellenos para mantener la cuadrícula */}
+            <div class="logos-page">
+              {[
+                { nombre: 'Falabella',      img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/falabella.jpg' },
+                { nombre: 'Espacio Urbano', img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/espacio-urbano.jpg' },
+                { nombre: 'El Colorado',    img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/elColorado.jpg' },
+                { nombre: 'Aramark',        img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/aramark.jpg' },
+                { nombre: 'UNIACC',         img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/uniacc.jpg' },
+                { nombre: 'Tavelli',        img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/tavelli.jpg' },
+                { nombre: 'Subway',         img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/subway.jpg' },
+                { nombre: 'Santander',      img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/santander.jpg' },
+                { nombre: 'Mall Plaza',     img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mallplaza.jpg' },
+                { nombre: 'Falabella',      img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/falabella.jpg' },
+                { nombre: "McDonald's",     img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mcdonalds.jpg' },
+                { nombre: 'Latam',          img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/latam.jpg' },
+              ].map(c => (
+                <div class="logo-item">
+                  <img src={c.img} alt={c.nombre} loading="lazy" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <button class="logos-btn logos-next" aria-label="Siguiente">&#8250;</button>
       </div>
     </div>
   </section>
@@ -72,5 +172,146 @@ const categorias = [
       </a>
     </div>
   </section>
+
+
+<style>
+  /* ── Servicios ── */
+  .servicios-section {
+    padding: 4rem 0;
+    background: #ffffff;
+  }
+  .servicios-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+  .servicio-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem 1rem;
+  }
+  .servicio-img {
+    width: 120px;
+    height: auto;
+    margin-bottom: 1.25rem;
+    filter: grayscale(100%);
+    opacity: 0.75;
+    transition: filter 0.3s, opacity 0.3s;
+  }
+  .servicio-card:hover .servicio-img {
+    filter: grayscale(0%);
+    opacity: 1;
+  }
+  .servicio-title {
+    font-size: 0.925rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #1c1917;
+    margin-bottom: 0.75rem;
+  }
+  .servicio-desc {
+    font-size: 0.875rem;
+    color: #6b6b6b;
+    line-height: 1.6;
+    margin: 0;
+  }
+  @media (max-width: 768px) {
+    .servicios-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .servicios-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Logos de clientes ── */
+  .logos-track-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .logos-viewport {
+    overflow: hidden;
+    flex: 1;
+  }
+  .logos-track {
+    display: flex;
+    transition: transform 0.4s ease;
+  }
+  .logos-page {
+    flex: 0 0 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, auto);
+  }
+  .logo-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem 1rem;
+  }
+  .logo-item img {
+    max-height: 110px;
+    width: 100%;
+    object-fit: contain;
+    filter: grayscale(30%);
+    opacity: 0.85;
+    transition: filter 0.3s, opacity 0.3s;
+  }
+  .logo-item img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+  }
+  .logos-btn {
+    background: none;
+    border: 1px solid #e0dbd4;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #8B7355;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .logos-btn:hover {
+    background: #8B7355;
+    color: #fff;
+    border-color: #8B7355;
+  }
+  @media (max-width: 768px) {
+    .logos-page { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .logos-page { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+<script>
+  const track = document.getElementById('logosTrack');
+  const pages = track?.querySelectorAll('.logos-page');
+  const total = pages?.length ?? 0;
+  let current = 0;
+
+  function update() {
+    if (!track) return;
+    track.style.transform = `translateX(-${current * 100}%)`;
+  }
+
+  document.querySelector('.logos-prev')?.addEventListener('click', () => {
+    current = current > 0 ? current - 1 : total - 1;
+    update();
+  });
+
+  document.querySelector('.logos-next')?.addEventListener('click', () => {
+    current = current < total - 1 ? current + 1 : 0;
+    update();
+  });
+</script>
 
 </Layout>

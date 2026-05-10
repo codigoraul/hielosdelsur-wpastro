@@ -1,0 +1,43 @@
+---
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Hielos del Sur",
+  "description": "Fábrica de mobiliario para restaurantes, food courts, comedores e instituciones educativas. Más de 25 años de experiencia en Chile.",
+  "url": "https://hielosdelsur.cl",
+  "logo": "https://hielosdelsur.cl/hielos-del-sur.svg",
+  "image": "https://hielosdelsur.cl/slider/slider-1.jpg",
+  "telephone": "+56-2-XXXXXXXX",
+  "email": "contacto@hielosdelsur.cl",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Santa Margarita 0487",
+    "addressLocality": "San Bernardo",
+    "addressRegion": "Región Metropolitana",
+    "addressCountry": "CL"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "-33.5927",
+    "longitude": "-70.7001"
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "opens": "09:00",
+    "closes": "18:00"
+  },
+  "sameAs": [
+    "https://www.instagram.com/hielos.del.sur"
+  ],
+  "priceRange": "$$"
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

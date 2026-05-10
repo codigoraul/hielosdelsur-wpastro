@@ -1,0 +1,175 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getProductos, getYoastSEOFromProduct } from '../../lib/wordpress.js';
+
+export async function getStaticPaths() {
+  // Obtener todos los productos de todas las categorías
+  const sillas = await getProductos('sillas');
+  const sillones = await getProductos('sillones');
+  const mesas = await getProductos('mesas');
+  const taburetes = await getProductos('taburetes');
+  const bancas = await getProductos('bancas');
+  
+  const todosProductos = [...sillas, ...sillones, ...mesas, ...taburetes, ...bancas];
+  
+  return todosProductos.map(producto => ({
+    params: { slug: producto.slug },
+    props: { producto }
+  }));
+}
+
+const { producto } = Astro.props;
+
+// Obtener datos de Yoast SEO para este producto específico
+const yoastData = await getYoastSEOFromProduct(producto.slug);
+
+// Título SEO (usa Yoast si está disponible, sino genera uno)
+const seoTitle = yoastData?.title || `${producto.titulo} — Hielos del Sur`;
+const seoDescription = yoastData?.description || producto.caracteristicas?.join('. ') || '';
+---
+
+<Layout 
+  title={seoTitle}
+  description={seoDescription}
+  yoastData={yoastData}
+>
+  
+  <!-- Breadcrumb -->
+  <section style="background:#f5f5f5; padding:1rem 0; border-bottom:1px solid #e5e5e5">
+    <div class="wrap">
+      <nav style="font-size:0.8rem; color:#78716c">
+        <a href="/" style="color:#78716c; text-decoration:none">Inicio</a>
+        <span style="margin:0 0.5rem">/</span>
+        <a href="/catalogo" style="color:#78716c; text-decoration:none">Catálogo</a>
+        <span style="margin:0 0.5rem">/</span>
+        <span style="color:#1c1917; font-weight:600">{producto.titulo}</span>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Producto detalle -->
+  <section style="padding:4rem 0; background:#FAFAFA">
+    <div class="wrap">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start">
+        
+        <!-- Galería de imágenes -->
+        <div>
+          {producto.imagen && (
+            <img 
+              src={producto.imagen} 
+              alt={producto.titulo}
+              style="width:100%; height:auto; border-radius:4px; box-shadow:0 2px 8px rgba(0,0,0,0.1)"
+            />
+          )}
+          
+          {producto.galeria && producto.galeria.length > 0 && (
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.75rem; margin-top:1.5rem">
+              {producto.galeria.map((img) => (
+                <img 
+                  src={img} 
+                  alt={producto.titulo}
+                  style="width:100%; height:auto; border-radius:4px; cursor:pointer; aspect-ratio:1; object-fit:cover; border:2px solid #e5e5e5"
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <!-- Información del producto -->
+        <div>
+          {producto.categoria && (
+            <span style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#8B7355">
+              {producto.categoria}
+            </span>
+          )}
+          
+          <h1 style="font-size:2.2rem; font-weight:800; color:#141414; margin:0.5rem 0 1.5rem; line-height:1.2">
+            {producto.titulo}
+          </h1>
+
+          {producto.articulo && (
+            <p style="font-size:1rem; color:#57534e; margin-bottom:2rem; font-weight:600">
+              Artículo: <span style="color:#8B7355">{producto.articulo}</span>
+            </p>
+          )}
+
+          {producto.caracteristicas && producto.caracteristicas.length > 0 && (
+            <div style="margin-bottom:2.5rem; background:#fff; padding:2rem; border-radius:4px; border:1px solid #e5e5e5">
+              <h3 style="font-size:0.75rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#78716c; margin-bottom:1rem">
+                Características
+              </h3>
+              <ul style="list-style:none; padding:0; margin:0">
+                {producto.caracteristicas.map((caract) => (
+                  <li style="padding:0.5rem 0; border-bottom:1px solid #f5f5f5; font-size:0.9rem; color:#1c1917; display:flex; align-items:start; gap:0.5rem">
+                    <span style="color:#8B7355; margin-top:0.2rem">•</span>
+                    <span>{caract}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:2rem">
+            {producto.procedencia && (
+              <div style="background:#fff; padding:1.5rem; border-radius:4px; border:1px solid #e5e5e5">
+                <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#78716c; margin-bottom:0.5rem">
+                  Procedencia
+                </p>
+                <p style="font-size:0.95rem; color:#1c1917; font-weight:600">{producto.procedencia}</p>
+              </div>
+            )}
+
+            {producto.garantia && (
+              <div style="background:#fff; padding:1.5rem; border-radius:4px; border:1px solid #e5e5e5">
+                <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#78716c; margin-bottom:0.5rem">
+                  Garantía
+                </p>
+                <p style="font-size:0.95rem; color:#1c1917; font-weight:600">{producto.garantia}</p>
+              </div>
+            )}
+
+            {producto.plazo && (
+              <div style="background:#fff; padding:1.5rem; border-radius:4px; border:1px solid #e5e5e5">
+                <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#78716c; margin-bottom:0.5rem">
+                  Plazo de entrega
+                </p>
+                <p style="font-size:0.95rem; color:#1c1917; font-weight:600">{producto.plazo}</p>
+              </div>
+            )}
+          </div>
+
+          {producto.nota && (
+            <div style="background:#FEF3C7; padding:1.5rem; border-radius:4px; border-left:4px solid #F59E0B; margin-bottom:2rem">
+              <p style="font-size:0.85rem; color:#92400E; line-height:1.6">{producto.nota}</p>
+            </div>
+          )}
+
+          {producto.pdf && (
+            <a 
+              href={producto.pdf} 
+              target="_blank"
+              style="display:inline-flex; align-items:center; gap:0.75rem; background:#141414; color:#fff; padding:1rem 2rem; border-radius:4px; text-decoration:none; font-size:0.8rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; transition:background 0.3s"
+              onmouseover="this.style.background='#8B7355'"
+              onmouseout="this.style.background='#141414'"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Ver ficha técnica
+            </a>
+          )}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+  @media (max-width: 768px) {
+    div[style*="grid-template-columns:1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>

@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GaleriaGrid from '../components/GaleriaGrid.jsx';
+import PageHero from '../components/PageHero.astro';
+import { getGaleria } from '../lib/wordpress.js';
+
+const { items, categorias } = await getGaleria('trabajos-realizados');
+---
+
+<Layout title="Trabajos Realizados — Hielos del Sur">
+
+  <PageHero titulo="Trabajos Realizados" imagen="/slider/slider-3.jpg" />
+
+  <section style="padding:4rem 0; background:#FAFAFA">
+    <div class="wrap">
+      <GaleriaGrid client:load items={items} categorias={categorias} />
+    </div>
+  </section>
+
+</Layout>

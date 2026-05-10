@@ -1,0 +1,205 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+---
+
+<Layout title="Contacto — Hielos del Sur">
+
+  <PageHero titulo="Contacto" imagen="/slider/slider-3.jpg" />
+
+  <!-- Sección principal -->
+  <section style="padding:5rem 0; background:#F8F6F2">
+    <div class="wrap">
+
+      <div style="display:grid; grid-template-columns:1fr 1.7fr; gap:3rem; align-items:start">
+
+        <!-- Columna izquierda -->
+        <div class="col-info">
+          <span class="sec-label">Contacto</span>
+          <h2 style="font-size:1.45rem; font-weight:800; color:#141414; margin:0.4rem 0 1.75rem">Datos de contacto</h2>
+
+          <!-- Marco único para todos los datos de contacto -->
+          <div style="border:6px solid #e7e7e7; border-radius:4px; background:#fff; padding:3rem 2.5rem; display:flex; flex-direction:column; gap:2.5rem">
+
+            <!-- Dirección -->
+            <div style="display:flex; align-items:flex-start; gap:1.1rem">
+              <div style="color:#8B7355; flex-shrink:0; margin-top:2px">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </div>
+              <div>
+                <p style="font-size:0.6rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#a8a29e; margin-bottom:0.3rem">Dirección</p>
+                <p style="font-size:0.9rem; color:#1c1917; line-height:1.65">Santa Margarita 0487<br/>San Bernardo, Santiago</p>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div style="display:flex; align-items:flex-start; gap:1.1rem">
+              <div style="color:#8B7355; flex-shrink:0; margin-top:2px">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <div>
+                <p style="font-size:0.6rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#a8a29e; margin-bottom:0.3rem">Email</p>
+                <a href="mailto:contacto@hielosdelsur.cl" style="font-size:0.9rem; color:#1c1917; text-decoration:none">contacto@hielosdelsur.cl</a>
+              </div>
+            </div>
+
+            <!-- Instagram -->
+            <div style="display:flex; align-items:flex-start; gap:1.1rem">
+              <div style="color:#8B7355; flex-shrink:0; margin-top:2px">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                </svg>
+              </div>
+              <div>
+                <p style="font-size:0.6rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#a8a29e; margin-bottom:0.3rem">Instagram</p>
+                <a href="https://instagram.com/hielos.del.sur" target="_blank" style="font-size:0.9rem; color:#1c1917; text-decoration:none">@hielos.del.sur</a>
+              </div>
+            </div>
+
+            <!-- Horario -->
+            <div style="display:flex; align-items:flex-start; gap:1.1rem">
+              <div style="width:16px; flex-shrink:0; margin-top:2px">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#8B7355">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div>
+                <p style="font-size:0.6rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#a8a29e; margin-bottom:0.3rem">Horario de atención</p>
+                <p style="font-size:0.9rem; color:#1c1917">Lun – Vie &nbsp;·&nbsp; 9:00 – 18:00 hrs</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Columna derecha — formulario -->
+        <div class="col-form" style="background:#ffffff; border:1px solid #e5e2dd; border-radius:3px; padding:3rem 2.5rem; box-sizing:border-box">
+          <h3 style="font-size:1.1rem; font-weight:800; color:#141414; margin-bottom:0.3rem">Envíanos un mensaje</h3>
+          <p style="font-size:0.82rem; color:#9a9a9a; margin-bottom:2rem">Te responderemos a la brevedad.</p>
+
+          <form name="contacto" method="POST">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 1.25rem">
+              <div class="campo">
+                <label>Nombre</label>
+                <input type="text" name="nombre" placeholder="Tu nombre" required />
+              </div>
+              <div class="campo">
+                <label>Empresa</label>
+                <input type="text" name="empresa" placeholder="Tu empresa" />
+              </div>
+              <div class="campo">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="tu@email.com" required />
+              </div>
+              <div class="campo">
+                <label>Teléfono</label>
+                <input type="tel" name="telefono" placeholder="+56 9 XXXX XXXX" />
+              </div>
+            </div>
+            <div class="campo">
+              <label>Mensaje</label>
+              <textarea name="mensaje" rows="6" placeholder="Cuéntanos sobre tu proyecto..." required></textarea>
+            </div>
+            <button type="submit" class="btn-enviar">
+              Enviar mensaje
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Mapa -->
+  <section style="padding:0">
+    <div style="width:100%; height:450px; position:relative">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3308.7234567890123!2d-70.70010!3d-33.5927!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDM1JzMzLjciUyA3MMKwNDInMDAuNCJX!5e0!3m2!1ses!2scl!4v1234567890123!5m2!1ses!2scl"
+        width="100%"
+        height="450"
+        style="border:0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Ubicación Hielos del Sur - Santa Margarita 0487, San Bernardo"
+      ></iframe>
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+  .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+  }
+  .campo label {
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #1c1917;
+  }
+  .campo input,
+  .campo textarea {
+    border: 1px solid #e5e2dd;
+    border-radius: 2px;
+    padding: 0.75rem 1rem;
+    font-size: 0.87rem;
+    color: #1c1917;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+    resize: none;
+  }
+  .campo input:focus,
+  .campo textarea:focus { border-color: #141414; }
+  .campo input::placeholder,
+  .campo textarea::placeholder { color: #bfbab2; font-size: 0.83rem; }
+
+  .btn-enviar {
+    width: 100%;
+    padding: 0.95rem 1.5rem;
+    background: #141414;
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    font-size: 0.73rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    transition: background 0.25s;
+    font-family: inherit;
+  }
+  .btn-enviar:hover { background: #8B7355; }
+
+  .col-info { margin-left: 45px; }
+  .col-form  { width: 100%; }
+
+  @media (max-width: 860px) {
+    div[style*="grid-template-columns:1fr 1.7fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    div[style*="grid-template-columns:1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    .col-info { display: none; }
+    .col-form { padding: 2rem 1.25rem; }
+  }
+</style>

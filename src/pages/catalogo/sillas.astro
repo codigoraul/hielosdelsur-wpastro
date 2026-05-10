@@ -1,7 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import CatalogGrid from '../../components/CatalogGrid.jsx';
-import { getProductos } from '../../lib/wordpress.js';
+import PageHero from '../../components/PageHero.astro';
+import { getProductos, getYoastSEOFromCategory } from '../../lib/wordpress.js';
+
+// Obtener datos de Yoast SEO desde la categoría "sillas"
+const yoastData = await getYoastSEOFromCategory('sillas');
 
 const sillas    = await getProductos('sillas');
 const taburetes = await getProductos('taburetes');
@@ -9,26 +13,12 @@ const productos = [...sillas, ...taburetes];
 const filtros = ['Metálicas', 'Plásticas', 'Tapizadas', 'Taburetes', 'Madera'];
 ---
 
-<Layout title="Sillas — Hielos del Sur">
+<Layout 
+  title="Sillas — Hielos del Sur"
+  yoastData={yoastData}
+>
 
-  <!-- Hero breadcrumb -->
-  <div style="position:relative; height:200px; overflow:hidden; background:#3a3a3a">
-    <img
-      src="/slider/slider-1.jpg"
-      alt="Sillas"
-      style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.4"
-    />
-    <div style="position:relative; z-index:1; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center">
-      <h1 style="color:#fff; font-size:2rem; font-weight:800; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.75rem">
-        Sillas
-      </h1>
-      <nav style="display:flex; align-items:center; gap:0.5rem; font-size:0.8rem; color:rgba(255,255,255,0.7)">
-        <a href="/" style="color:rgba(255,255,255,0.7); text-decoration:none; hover:color:white">Home</a>
-        <span>›</span>
-        <span style="color:#fff">Sillas</span>
-      </nav>
-    </div>
-  </div>
+  <PageHero titulo="Sillas" imagen="/slider/slider-1.jpg" breadcrumb="Sillas" />
 
   <!-- Catálogo -->
   <section style="padding:4rem 0; background:#FAFAFA">

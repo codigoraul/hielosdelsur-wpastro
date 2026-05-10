@@ -7,7 +7,6 @@ function useCols() {
       const w = window.innerWidth;
       if (w >= 1024)      setCols(6);
       else if (w >= 768)  setCols(4);
-      else if (w >= 480)  setCols(3);
       else                setCols(2);
     };
     update();
@@ -204,11 +203,7 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
                   animation: 'panelSlide 0.35s ease',
                 }}
               >
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: COLS <= 2 ? '1fr' : '55% 45%',
-                  minHeight: COLS <= 2 ? 'auto' : '660px',
-                }}>
+                <div className="panel-inner">
                   {/* Imagen grande + galería */}
                   <div style={{
                     background: '#FAFAFA',
@@ -257,7 +252,7 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
                   </div>
 
                   {/* Detalles */}
-                  <div style={{ padding: '2.5rem', position: 'relative', background: '#FAFAFA' }}>
+                  <div className="panel-details">
                     {/* Cerrar */}
                     <button
                       onClick={() => setProductoActivo(null)}
@@ -275,7 +270,7 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
                     </h2>
                     {productoActivo.articulo && (
                       <p style={{ fontSize: '0.85rem', fontWeight: '700', color: '#8B7355', marginBottom: '1.5rem' }}>
-                        {productoActivo.articulo}
+                      Art. {productoActivo.articulo}
                       </p>
                     )}
 
@@ -353,6 +348,30 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
           to {
             opacity: 1;
             transform: perspective(600px) rotateY(0deg) translateX(0);
+          }
+        }
+
+        /* Panel layout */
+        .panel-inner {
+          display: grid;
+          grid-template-columns: 55% 45%;
+          min-height: 560px;
+          background: #FAFAFA;
+        }
+        .panel-details {
+          padding: 2.5rem;
+          position: relative;
+          background: #FAFAFA;
+        }
+
+        /* Mobile: apilado vertical */
+        @media (max-width: 767px) {
+          .panel-inner {
+            grid-template-columns: 1fr;
+            min-height: auto;
+          }
+          .panel-details {
+            padding: 1.25rem 1rem 2rem;
           }
         }
       `}</style>
