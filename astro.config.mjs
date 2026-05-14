@@ -3,7 +3,7 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://hielosdelsur.cl',
+  site: 'https://hielosdelsur.cl/muestra',
   output: 'static',
   integrations: [
     react(),

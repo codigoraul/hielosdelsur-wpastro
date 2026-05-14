@@ -1,4 +1,4 @@
-const WP_URL = 'http://localhost:10053';
+const WP_URL = 'https://hielosdelsur.cl/admin';
 
 // Obtener datos de Yoast SEO para una página
 export async function getYoastSEO(slug) {

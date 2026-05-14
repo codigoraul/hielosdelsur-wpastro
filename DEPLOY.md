@@ -7,13 +7,17 @@
 3. Agrega estos 3 secrets:
 
 ### FTP_SERVER
-El servidor FTP (ejemplo: `ftp.hielosdelsur.cl` o la IP del servidor)
+```
+ftp.hielosdelsurspa.cl
+```
 
 ### FTP_USERNAME
-El usuario FTP que creaste en cPanel
+```
+conexion@hielosdelsur.cl
+```
 
 ### FTP_PASSWORD
-La contraseña del usuario FTP
+La contraseña que configuraste para el usuario FTP
 
 ## Estructura en el servidor
 
