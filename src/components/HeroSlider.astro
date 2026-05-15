@@ -1,7 +1,7 @@
 ---
 const slides = [
   {
-    image: '/slider/slider-2.jpg',
+    image: 'slider/slider-2.jpg',
     position: '50% 100%',
     title: 'Más de 20 años',
     subtitle: 'EQUIPANDO CHILE',
@@ -9,7 +9,7 @@ const slides = [
     cta: { label: 'Proyectos Realizados', href: '/proyectos' },
   },
   {
-    image: '/slider/slider-1.jpg',
+    image: 'slider/slider-1.jpg',
     position: 'center',
     title: 'Bienvenidos a',
     subtitle: 'HIELOS DEL SUR',
@@ -17,7 +17,7 @@ const slides = [
     cta: { label: 'Ver Catálogo', href: '/catalogo' },
   },
   {
-    image: '/slider/slider-3.jpg',
+    image: 'slider/slider-3.jpg',
     position: 'center',
     title: 'Calidad y diseño',
     subtitle: 'PARA TU NEGOCIO',
@@ -36,10 +36,12 @@ const slides = [
       data-index={i}
     >
       <!-- Imagen de fondo -->
-      <div
-        class="absolute inset-0 bg-cover scale-105 transition-transform duration-[8000ms]"
-        style={`background-image: url('${slide.image}'); background-position: ${slide.position}`}
-      ></div>
+      <img
+        src={slide.image}
+        alt={slide.subtitle}
+        class="absolute inset-0 w-full h-full object-cover scale-105 transition-transform duration-[8000ms]"
+        style={`object-position: ${slide.position}`}
+      />
 
       <!-- Overlay oscuro gradiente -->
       <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
