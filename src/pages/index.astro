@@ -5,12 +5,13 @@ import { getYoastSEO } from '../lib/wordpress.js';
 
 // Obtener datos de Yoast SEO para la página de inicio
 const yoastData = await getYoastSEO('inicio');
+const base = import.meta.env.BASE_URL;
 
 const categorias = [
-  { label: 'Sillas',    href: '/catalogo/sillas',    img: '/images/sillas.jpg',    light: true },
-  { label: 'Sillones',  href: '/catalogo/sillones',  img: '/images/sillones.jpg',  light: true },
-  { label: 'Taburetes', href: '/catalogo/taburetes', img: '/images/taburetes.jpg', light: true },
-  { label: 'Mesas y Bases', href: '/catalogo/mesas', img: '/images/mesas-y-bases.jpg', light: true },
+  { label: 'Sillas',    href: `${base}/catalogo/sillas`,    img: './images/sillas.jpg',    light: true },
+  { label: 'Sillones',  href: `${base}/catalogo/sillones`,  img: './images/sillones.jpg',  light: true },
+  { label: 'Taburetes', href: `${base}/catalogo/taburetes`, img: './images/taburetes.jpg', light: true },
+  { label: 'Mesas y Bases', href: `${base}/catalogo/mesas`, img: './images/mesas-y-bases.jpg', light: true },
 ];
 ---
 
@@ -164,7 +165,7 @@ const categorias = [
       <span class="cta-label">¿Tienes un proyecto?</span>
       <h2 class="sec-title-white">Hablemos de tu próximo espacio</h2>
       <p class="cta-desc">Cotiza sin compromiso. Te asesoramos para encontrar el mobiliario ideal para tu restaurante, hotel o espacio gastronómico.</p>
-      <a href="/contacto" class="btn-accent">
+      <a href={`${base}/contacto`} class="btn-accent">
         Solicitar cotización
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
