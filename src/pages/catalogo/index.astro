@@ -2,35 +2,37 @@
 import Layout from '../../layouts/Layout.astro';
 import PageHero from '../../components/PageHero.astro';
 
+const base = import.meta.env.BASE_URL;
+
 const categorias = [
   {
     label: 'Sillas',
-    href: '/catalogo/sillas',
-    image: '/images/sillas.jpg',
+    href: `${base}/catalogo/sillas`,
+    image: `${base}/images/sillas.jpg`,
     desc: 'Metálicas, plásticas, tapizadas y más para cada ambiente.',
   },
   {
     label: 'Sillones',
-    href: '/catalogo/sillones',
-    image: '/slider/slider-2.jpg',
+    href: `${base}/catalogo/sillones`,
+    image: `${base}/slider/slider-2.jpg`,
     desc: 'Confort y diseño para espacios lounge y salas de espera.',
   },
   {
     label: 'Taburetes',
-    href: '/catalogo/taburetes',
-    image: '/slider/slider-3.jpg',
+    href: `${base}/catalogo/taburetes`,
+    image: `${base}/slider/slider-3.jpg`,
     desc: 'Ideales para barras y mesones de cocina o café.',
   },
   {
     label: 'Mesas',
-    href: '/catalogo/mesas',
-    image: '/slider/slider-2.jpg',
+    href: `${base}/catalogo/mesas`,
+    image: `${base}/slider/slider-2.jpg`,
     desc: 'Cuadradas, redondas y rectangulares en distintos acabados.',
   },
   {
     label: 'Bancas',
-    href: '/catalogo/bancas',
-    image: '/slider/slider-1.jpg',
+    href: `${base}/catalogo/bancas`,
+    image: `${base}/slider/slider-1.jpg`,
     desc: 'Tapizadas y en madera para áreas de espera o comedores.',
   },
 ];
