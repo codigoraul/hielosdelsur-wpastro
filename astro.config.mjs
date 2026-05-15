@@ -4,7 +4,6 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://hielosdelsur.cl/muestra',
-  base: '.',
   output: 'static',
   integrations: [
     react(),
