@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "node ./node_modules/astro/bin/astro.mjs dev",
-    "build": "node ./node_modules/astro/bin/astro.mjs build && node fix-paths.js",
+    "build": "node ./node_modules/astro/bin/astro.mjs build",
     "preview": "node ./node_modules/astro/bin/astro.mjs preview",
     "astro": "node ./node_modules/astro/bin/astro.mjs"
   },
