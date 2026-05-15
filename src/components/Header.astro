@@ -2,18 +2,18 @@
 const base = import.meta.env.BASE_URL;
 
 const navItems = [
-  { label: 'Catálogo', href: `${base}/catalogo`, hasDropdown: true },
-  { label: 'Trabajos Realizados', href: `${base}/trabajos` },
-  { label: 'Proyectos Realizados', href: `${base}/proyectos` },
-  { label: 'Clientes', href: `${base}/clientes` },
-  { label: 'Nosotros', href: `${base}/nosotros` },
-  { label: 'Contacto', href: `${base}/contacto` },
+  { label: 'Catálogo', href: `${base}catalogo`, hasDropdown: true },
+  { label: 'Trabajos Realizados', href: `${base}trabajos` },
+  { label: 'Proyectos Realizados', href: `${base}proyectos` },
+  { label: 'Clientes', href: `${base}clientes` },
+  { label: 'Nosotros', href: `${base}nosotros` },
+  { label: 'Contacto', href: `${base}contacto` },
 ];
 
 const catalogItems = [
-  { label: 'Sillas', href: `${base}/catalogo/sillas` },
-  { label: 'Sillones', href: `${base}/catalogo/sillones` },
-  { label: 'Mesas', href: `${base}/catalogo/mesas` },
+  { label: 'Sillas', href: `${base}catalogo/sillas` },
+  { label: 'Sillones', href: `${base}catalogo/sillones` },
+  { label: 'Mesas', href: `${base}catalogo/mesas` },
 ];
 ---
 
@@ -51,7 +51,7 @@ const catalogItems = [
 
       <!-- Logo -->
       <a href={base} class="flex-shrink-0">
-        <img src={`${base}/hielos-del-sur.svg`} alt="Hielos del Sur" class="h-14 w-auto object-contain" />
+        <img src="./hielos-del-sur.svg" alt="Hielos del Sur" class="h-14 w-auto object-contain" />
       </a>
 
       <!-- Nav desktop — oculto en móvil -->
@@ -108,7 +108,7 @@ const catalogItems = [
   ">
     <!-- Cabecera panel -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid #f0ede8">
-      <img src={`${base}/hielos-del-sur.svg`} alt="Hielos del Sur" style="height:2.5rem;object-fit:contain" />
+      <img src="./hielos-del-sur.svg" alt="Hielos del Sur" style="height:2.5rem;object-fit:contain" />
       <button id="menu-close" aria-label="Cerrar" style="background:none;border:none;cursor:pointer;color:#78716c;padding:4px">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
