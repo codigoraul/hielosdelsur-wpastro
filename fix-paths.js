@@ -27,14 +27,14 @@ async function fixPaths(dir, baseDir = './dist') {
       
       await writeFile(fullPath, content, 'utf-8');
       console.log(`✓ Fixed: ${fullPath}`);
-    } else if (file.name.endsWith('.css') || file.name.endsWith('.js')) {
+    } else if (file.name.endsWith('.css')) {
       let content = await readFile(fullPath, 'utf-8');
       
-      // Para CSS/JS siempre usar rutas relativas simples
+      // Para CSS solo procesar url()
       content = content.replace(/url\(["']?\/(?!\/|https?:)/g, 'url("../');
       
       await writeFile(fullPath, content, 'utf-8');
-      console.log(`✓ Fixed: ${fullPath}`);
+      console.log(`✓ Fixed CSS: ${fullPath}`);
     }
   }
 }
