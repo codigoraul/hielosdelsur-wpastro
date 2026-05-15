@@ -9,22 +9,18 @@ async function fixPaths(dir) {
     
     if (file.isDirectory()) {
       await fixPaths(fullPath);
-    } else if (file.name.endsWith('.html')) {
+    } else if (file.name.endsWith('.html') || file.name.endsWith('.css') || file.name.endsWith('.js')) {
       let content = await readFile(fullPath, 'utf-8');
       
-      // Reemplazar rutas absolutas por relativas
-      content = content.replace(/href="\/_astro\//g, 'href="./_astro/');
-      content = content.replace(/src="\/_astro\//g, 'src="./_astro/');
-      content = content.replace(/href="\/favicon\.svg"/g, 'href="./favicon.svg"');
-      content = content.replace(/src="\/favicon\.svg"/g, 'src="./favicon.svg"');
-      content = content.replace(/href="\/images\//g, 'href="./images/');
-      content = content.replace(/src="\/images\//g, 'src="./images/');
-      content = content.replace(/href="\/icons\//g, 'href="./icons/');
-      content = content.replace(/src="\/icons\//g, 'src="./icons/');
-      content = content.replace(/href="\/slider\//g, 'href="./slider/');
-      content = content.replace(/src="\/slider\//g, 'src="./slider/');
-      content = content.replace(/href="\/sillas\//g, 'href="./sillas/');
-      content = content.replace(/src="\/sillas\//g, 'src="./sillas/');
+      // Reemplazar TODOS los href que empiezan con / (excepto URLs externas)
+      // Esto captura href="/algo" y lo convierte en href="./algo"
+      content = content.replace(/href="\/(?!\/|https?:)/g, 'href="./');
+      
+      // Reemplazar TODOS los src que empiezan con / (excepto URLs externas)
+      content = content.replace(/src="\/(?!\/|https?:)/g, 'src="./');
+      
+      // Reemplazar url() en CSS/JS
+      content = content.replace(/url\(["']?\/(?!\/|https?:)/g, 'url("./');
       
       await writeFile(fullPath, content, 'utf-8');
       console.log(`✓ Fixed: ${fullPath}`);
