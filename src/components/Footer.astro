@@ -21,7 +21,7 @@ const year = new Date().getFullYear();
       <ul style="display:flex; flex-direction:column; gap:0.85rem; list-style:none">
         {['Sillas', 'Sillones', 'Taburetes', 'Mesas', 'Bancas'].map(cat => (
           <li>
-            <a href={`${base}catalogo/${cat.toLowerCase()}`} style="font-size:0.875rem; color:#a8a29e; text-decoration:none; transition:color 0.2s"
+            <a href={`${base}/catalogo/${cat.toLowerCase()}`} style="font-size:0.875rem; color:#a8a29e; text-decoration:none; transition:color 0.2s"
                onmouseover="this.style.color='#8B7355'" onmouseout="this.style.color='#a8a29e'">
               {cat}
             </a>
