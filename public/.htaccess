@@ -1,0 +1,12 @@
+DirectoryIndex index.html
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /muestra/
+  
+  # Redirigir a index.html si existe
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ index.html [L]
+</IfModule>
