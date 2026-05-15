@@ -1,28 +1,30 @@
 ---
+import { Image } from 'astro:assets';
+
 const slides = [
   {
-    image: '/slider/slider-2.jpg',
+    image: './slider/slider-2.jpg',
     position: '50% 100%',
     title: 'Más de 20 años',
     subtitle: 'EQUIPANDO CHILE',
     description: 'Sillas, taburetes, mesas y sillones para cada proyecto.',
-    cta: { label: 'Proyectos Realizados', href: '/proyectos' },
+    cta: { label: 'Proyectos Realizados', href: './proyectos' },
   },
   {
-    image: '/slider/slider-1.jpg',
+    image: './slider/slider-1.jpg',
     position: 'center',
     title: 'Bienvenidos a',
     subtitle: 'HIELOS DEL SUR',
     description: 'Mobiliario de calidad para restaurantes y espacios gastronómicos.',
-    cta: { label: 'Ver Catálogo', href: '/catalogo' },
+    cta: { label: 'Ver Catálogo', href: './catalogo' },
   },
   {
-    image: '/slider/slider-3.jpg',
+    image: './slider/slider-3.jpg',
     position: 'center',
     title: 'Calidad y diseño',
     subtitle: 'PARA TU NEGOCIO',
     description: 'Solicita tu cotización y asesoría personalizada.',
-    cta: { label: 'Contáctanos', href: '/contacto' },
+    cta: { label: 'Contáctanos', href: './contacto' },
   },
 ];
 ---
