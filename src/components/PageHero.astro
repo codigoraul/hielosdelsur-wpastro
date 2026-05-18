@@ -16,7 +16,7 @@ const {
 } = Astro.props;
 
 // Agregar BASE_URL si la imagen empieza con /
-const imagen = imagenProp.startsWith('/') ? `${base}${imagenProp}` : imagenProp;
+const imagen = imagenProp.startsWith('/') ? `${base.replace(/\/$/, '')}${imagenProp}` : imagenProp;
 ---
 
 <div style="position:relative; height:200px; overflow:hidden; background:#3a3a3a">
