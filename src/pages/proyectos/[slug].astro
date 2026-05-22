@@ -29,20 +29,38 @@ const todasLasImagenes = [
           <a href={`${base}/proyectos`}>← Proyectos Terminados</a>
         </p>
         <h1>{proyecto.titulo}</h1>
-        {(proyecto.cliente || proyecto.anio) && (
-          <p class="proyecto-hero-meta">
-            {[proyecto.cliente, proyecto.anio].filter(Boolean).join(' · ')}
-          </p>
-        )}
       </div>
     </div>
   </section>
 
-  <!-- Descripción -->
-  {proyecto.descripcion && (
-    <section class="proyecto-desc-section">
+  <!-- Ficha del proyecto: Año, Cliente, Descripción -->
+  {(proyecto.anio || proyecto.cliente || proyecto.descripcion) && (
+    <section class="proyecto-ficha-section">
       <div class="wrap">
-        <p class="proyecto-descripcion">{proyecto.descripcion}</p>
+        <div class="proyecto-ficha">
+          {(proyecto.anio || proyecto.cliente) && (
+            <div class="proyecto-ficha-meta">
+              {proyecto.anio && (
+                <div class="proyecto-ficha-campo">
+                  <span class="proyecto-ficha-label">Año</span>
+                  <span class="proyecto-ficha-valor">{proyecto.anio}</span>
+                </div>
+              )}
+              {proyecto.cliente && (
+                <div class="proyecto-ficha-campo">
+                  <span class="proyecto-ficha-label">Cliente</span>
+                  <span class="proyecto-ficha-valor">{proyecto.cliente}</span>
+                </div>
+              )}
+            </div>
+          )}
+          {proyecto.descripcion && (
+            <div class="proyecto-ficha-desc">
+              <span class="proyecto-ficha-label">Descripción</span>
+              <p class="proyecto-ficha-texto">{proyecto.descripcion}</p>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   )}
@@ -112,25 +130,72 @@ const todasLasImagenes = [
     text-transform: uppercase;
     margin: 0 0 0.5rem;
   }
-  .proyecto-hero-meta {
-    color: #d4a96a;
-    font-size: 0.88rem;
-    font-weight: 600;
-    margin: 0;
-  }
-
-  /* Descripción */
-  .proyecto-desc-section {
+  /* Ficha del proyecto */
+  .proyecto-ficha-section {
     padding: 2.5rem 0;
     background: #fff;
     border-bottom: 1px solid #f0ebe3;
   }
-  .proyecto-descripcion {
-    max-width: 720px;
+  .proyecto-ficha {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    border: 1px solid #e8e0d5;
+    border-radius: 6px;
+    padding: 1.75rem 2rem;
+    background: #faf8f5;
+    max-width: 860px;
+  }
+  .proyecto-ficha-meta {
+    display: flex;
+    gap: 2rem;
+    flex-shrink: 0;
+  }
+  .proyecto-ficha-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .proyecto-ficha-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #a09080;
+  }
+  .proyecto-ficha-valor {
     font-size: 1rem;
-    line-height: 1.8;
+    font-weight: 600;
+    color: #2a2217;
+  }
+  .proyecto-ficha-desc {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    border-left: 2px solid #e8e0d5;
+    padding-left: 2rem;
+    flex: 1;
+  }
+  .proyecto-ficha-texto {
+    font-size: 0.95rem;
+    line-height: 1.75;
     color: #57534e;
-    margin: 0 auto;
+    margin: 0;
+  }
+  @media (max-width: 600px) {
+    .proyecto-ficha {
+      flex-direction: column;
+      padding: 1.25rem;
+    }
+    .proyecto-ficha-desc {
+      border-left: none;
+      padding-left: 0;
+      border-top: 2px solid #e8e0d5;
+      padding-top: 1rem;
+    }
+    .proyecto-ficha-meta {
+      gap: 1.5rem;
+    }
   }
 
   /* Galería */

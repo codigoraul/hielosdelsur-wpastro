@@ -92,7 +92,7 @@ export async function getGaleria(tipoSlug = '', catSlug = '') {
       slug:        p.slug || '',
       titulo:      p.title?.rendered || '',
       imagen:      p.imagen_url || '',
-      galeria:     p.galeria_urls || [],
+      galeria:     p.meta?.galeria_urls || [],
       categoria:   cat?.name || '',
       catSlug:     cat?.slug || '',
       descripcion: p.meta?.descripcion || '',
