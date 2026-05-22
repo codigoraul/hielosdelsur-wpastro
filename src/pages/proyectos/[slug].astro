@@ -1,0 +1,278 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getGaleria } from '../../lib/wordpress.js';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+export async function getStaticPaths() {
+  const { items } = await getGaleria('proyectos-realizados');
+  return items.map(p => ({
+    params: { slug: p.slug },
+    props:  { proyecto: p },
+  }));
+}
+
+const { proyecto } = Astro.props;
+const todasLasImagenes = [
+  ...(proyecto.imagen ? [proyecto.imagen] : []),
+  ...(proyecto.galeria || []),
+];
+---
+
+<Layout title={`${proyecto.titulo} — Proyectos Terminados — Hielos del Sur`}>
+
+  <!-- Hero del proyecto -->
+  <section class="proyecto-hero" style={proyecto.imagen ? `background-image:url('${proyecto.imagen}')` : ''}>
+    <div class="proyecto-hero-overlay">
+      <div class="wrap">
+        <p class="proyecto-breadcrumb">
+          <a href={`${base}/proyectos`}>← Proyectos Terminados</a>
+        </p>
+        <h1>{proyecto.titulo}</h1>
+        {(proyecto.cliente || proyecto.anio) && (
+          <p class="proyecto-hero-meta">
+            {[proyecto.cliente, proyecto.anio].filter(Boolean).join(' · ')}
+          </p>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- Descripción -->
+  {proyecto.descripcion && (
+    <section class="proyecto-desc-section">
+      <div class="wrap">
+        <p class="proyecto-descripcion">{proyecto.descripcion}</p>
+      </div>
+    </section>
+  )}
+
+  <!-- Galería de fotos -->
+  {todasLasImagenes.length > 0 && (
+    <section class="proyecto-galeria-section">
+      <div class="wrap">
+        <div class="proyecto-galeria-grid">
+          {todasLasImagenes.map((url, i) => (
+            <div class="proyecto-galeria-item" data-index={i}>
+              <img src={url} alt={`${proyecto.titulo} — foto ${i + 1}`} loading="lazy" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Lightbox -->
+  <div id="lb" class="lb-overlay" aria-hidden="true">
+    <button id="lb-close" aria-label="Cerrar">✕</button>
+    <button id="lb-prev" aria-label="Anterior">&#8249;</button>
+    <button id="lb-next" aria-label="Siguiente">&#8250;</button>
+    <div class="lb-inner">
+      <img id="lb-img" src="" alt="" />
+    </div>
+    <p id="lb-counter"></p>
+  </div>
+
+</Layout>
+
+<style>
+  /* Hero */
+  .proyecto-hero {
+    min-height: 420px;
+    background-size: cover;
+    background-position: center;
+    background-color: #2a2217;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+  }
+  .proyecto-hero-overlay {
+    width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 100%);
+    padding: 3rem 0 2.5rem;
+  }
+  .proyecto-breadcrumb {
+    margin: 0 0 1rem;
+  }
+  .proyecto-breadcrumb a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .proyecto-breadcrumb a:hover { color: #fff; }
+  .proyecto-hero h1 {
+    color: #fff;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 0 0.5rem;
+  }
+  .proyecto-hero-meta {
+    color: #d4a96a;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  /* Descripción */
+  .proyecto-desc-section {
+    padding: 2.5rem 0;
+    background: #fff;
+    border-bottom: 1px solid #f0ebe3;
+  }
+  .proyecto-descripcion {
+    max-width: 720px;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #57534e;
+    margin: 0 auto;
+  }
+
+  /* Galería */
+  .proyecto-galeria-section {
+    padding: 3rem 0 5rem;
+    background: #FAFAFA;
+  }
+  .proyecto-galeria-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+  @media (max-width: 900px) {
+    .proyecto-galeria-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 500px) {
+    .proyecto-galeria-grid { grid-template-columns: 1fr; }
+  }
+
+  .proyecto-galeria-item {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    cursor: pointer;
+    background: #e8e0d5;
+    border-radius: 2px;
+  }
+  .proyecto-galeria-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+  }
+  .proyecto-galeria-item:hover img { transform: scale(1.05); }
+
+  /* Lightbox */
+  .lb-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .lb-overlay.active { display: flex; }
+
+  .lb-inner {
+    max-width: 90vw;
+    max-height: 82vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #lb-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 2px;
+  }
+
+  #lb-close {
+    position: fixed;
+    top: 1.2rem;
+    right: 1.5rem;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  #lb-close:hover { background: rgba(255,255,255,0.3); }
+
+  #lb-prev, #lb-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.12);
+    border: none;
+    color: #fff;
+    font-size: 2.5rem;
+    width: 52px;
+    height: 72px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 2px;
+  }
+  #lb-prev { left: 1rem; }
+  #lb-next { right: 1rem; }
+  #lb-prev:hover, #lb-next:hover { background: rgba(255,255,255,0.25); }
+
+  #lb-counter {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+  }
+</style>
+
+<script define:vars={{ todasLasImagenes }}>
+  const urls = todasLasImagenes;
+  let current = 0;
+
+  const lb      = document.getElementById('lb');
+  const lbImg   = document.getElementById('lb-img');
+  const lbClose = document.getElementById('lb-close');
+  const lbPrev  = document.getElementById('lb-prev');
+  const lbNext  = document.getElementById('lb-next');
+  const lbCnt   = document.getElementById('lb-counter');
+
+  function showLb(idx) {
+    current = (idx + urls.length) % urls.length;
+    lbImg.src = urls[current];
+    lbCnt.textContent = `${current + 1} / ${urls.length}`;
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLb() {
+    lb.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.proyecto-galeria-item').forEach((el, i) => {
+    el.addEventListener('click', () => showLb(i));
+  });
+
+  lbClose.addEventListener('click', closeLb);
+  lbPrev.addEventListener('click', () => showLb(current - 1));
+  lbNext.addEventListener('click', () => showLb(current + 1));
+  lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('active')) return;
+    if (e.key === 'Escape') closeLb();
+    if (e.key === 'ArrowLeft')  showLb(current - 1);
+    if (e.key === 'ArrowRight') showLb(current + 1);
+  });
+</script>

@@ -70,7 +70,7 @@ export async function getGaleria(tipoSlug = '', catSlug = '') {
   while (true) {
     const params = new URLSearchParams({
       per_page: '100', page: String(page), orderby: 'date', order: 'asc',
-      _fields: 'id,title,imagen_url,galeria-tipo,galeria-cat,meta',
+      _fields: 'id,slug,title,imagen_url,galeria_urls,galeria-tipo,galeria-cat,meta',
       'galeria-tipo': tipoId,
     });
     const res = await fetch(`${WP_URL}/wp-json/wp/v2/galeria?${params}`);
@@ -89,8 +89,10 @@ export async function getGaleria(tipoSlug = '', catSlug = '') {
     const cat    = catIds.map(id => catMap[id]).find(c => c) || null;
     return {
       id:          p.id,
+      slug:        p.slug || '',
       titulo:      p.title?.rendered || '',
       imagen:      p.imagen_url || '',
+      galeria:     p.galeria_urls || [],
       categoria:   cat?.name || '',
       catSlug:     cat?.slug || '',
       descripcion: p.meta?.descripcion || '',
