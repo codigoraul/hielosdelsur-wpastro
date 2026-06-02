@@ -39,28 +39,52 @@ body {
 
 .cats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
-@media (max-width: 1024px) { .cats-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 640px)  { .cats-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .cats-grid { grid-template-columns: repeat(1, 1fr); } }
 
 .cat-item {
   position: relative;
   overflow: hidden;
   border-radius: 0.5rem;
-  aspect-ratio: 1;
+  aspect-ratio: 16/9;
   display: block;
   text-decoration: none;
 }
 .cat-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
 .cat-item:hover img { transform: scale(1.08); }
+
+/* Borde que se dibuja al hover — derecha+arriba primero, luego izquierda+abajo */
+.cat-item::before,
+.cat-item::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+.cat-item::before {
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-top: 1.5px solid #222;
+  border-right: 1.5px solid #222;
+  transition: height 0.18s ease 0s, width 0.18s ease 0.18s;
+}
+.cat-item::after {
+  bottom: 0; left: 0;
+  width: 0; height: 0;
+  border-bottom: 1.5px solid #222;
+  border-left: 1.5px solid #222;
+  transition: height 0.18s ease 0.36s, width 0.18s ease 0.54s;
+}
+.cat-item:hover::before { width: 100%; height: 100%; }
+.cat-item:hover::after  { width: 100%; height: 100%; }
 .cat-item .cat-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.08) 40%, transparent 100%);
+  background: transparent;
 }
 .cat-item--light .cat-overlay {
-  background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.04) 35%, transparent 100%);
+  background: transparent;
 }
 .cat-item .cat-name {
   position: absolute;
@@ -68,12 +92,12 @@ body {
   left: 0;
   right: 0;
   text-align: center;
-  color: #fff;
-  font-size: 0.845rem;
-  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 1rem;
+  font-weight: 800;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+  text-shadow: none;
 }
 
 .why-grid {
