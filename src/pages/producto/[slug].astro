@@ -55,20 +55,24 @@ const seoDescription = yoastData?.description || producto.caracteristicas?.join(
         <!-- Galería de imágenes -->
         <div>
           {producto.imagen && (
-            <img 
-              src={producto.imagen} 
+            <img
+              src={producto.imagen}
               alt={producto.titulo}
-              style="width:100%; height:auto; border-radius:4px; box-shadow:0 2px 8px rgba(0,0,0,0.1)"
+              class="producto-imagen-zoom"
+              data-lightbox-src={producto.imagen}
+              style="width:100%; height:auto; border-radius:4px; box-shadow:0 2px 8px rgba(0,0,0,0.1); cursor:zoom-in"
             />
           )}
-          
+
           {producto.galeria && producto.galeria.length > 0 && (
             <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.75rem; margin-top:1.5rem">
               {producto.galeria.map((img) => (
-                <img 
-                  src={img} 
+                <img
+                  src={img}
                   alt={producto.titulo}
-                  style="width:100%; height:auto; border-radius:4px; cursor:pointer; aspect-ratio:1; object-fit:cover; border:2px solid #e5e5e5"
+                  class="producto-imagen-zoom"
+                  data-lightbox-src={img}
+                  style="width:100%; height:auto; border-radius:4px; cursor:zoom-in; aspect-ratio:1; object-fit:cover; border:2px solid #e5e5e5"
                 />
               ))}
             </div>
@@ -164,6 +168,12 @@ const seoDescription = yoastData?.description || producto.caracteristicas?.join(
     </div>
   </section>
 
+  <!-- Lightbox de imagen -->
+  <div id="lightbox-overlay" class="lightbox-overlay">
+    <button id="lightbox-close" class="lightbox-close" aria-label="Cerrar">&times;</button>
+    <img id="lightbox-img" class="lightbox-img" src="" alt="" />
+  </div>
+
 </Layout>
 
 <style>
@@ -172,4 +182,79 @@ const seoDescription = yoastData?.description || producto.caracteristicas?.join(
       grid-template-columns: 1fr !important;
     }
   }
+
+  .lightbox-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    cursor: zoom-out;
+  }
+
+  .lightbox-overlay.active {
+    display: flex;
+  }
+
+  .lightbox-img {
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 4px;
+    cursor: default;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
 </style>
+
+<script>
+  const overlay = document.getElementById('lightbox-overlay');
+  const overlayImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
+  const closeBtn = document.getElementById('lightbox-close');
+
+  function openLightbox(src: string, alt: string) {
+    if (!overlay || !overlayImg) return;
+    overlayImg.src = src;
+    overlayImg.alt = alt;
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    if (!overlay || !overlayImg) return;
+    overlay.classList.remove('active');
+    overlayImg.src = '';
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll<HTMLImageElement>('.producto-imagen-zoom').forEach((el) => {
+    el.addEventListener('click', () => {
+      const src = el.getAttribute('data-lightbox-src') || el.src;
+      openLightbox(src, el.alt);
+    });
+  });
+
+  closeBtn?.addEventListener('click', closeLightbox);
+  overlay?.addEventListener('click', (e) => {
+    if (e.target === overlay) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
