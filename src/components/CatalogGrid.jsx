@@ -16,6 +16,19 @@ function useCols() {
   return cols;
 }
 
+// El lightbox solo se activa en escritorio (>=768px); en celular la imagen
+// del panel ya se ve a buen tamaño y no necesita zoom a pantalla completa.
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(true);
+  useEffect(() => {
+    const update = () => setIsDesktop(window.innerWidth >= 768);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+  return isDesktop;
+}
+
 export default function CatalogGrid({ productos = [], filtros = [] }) {
   const COLS = useCols();
   const [filtroActivo, setFiltroActivo] = useState('todas');
@@ -24,7 +37,9 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
   const [saliendo, setSaliendo] = useState(false);
   const [productoActivo, setProductoActivo] = useState(null);
   const [imgActiva, setImgActiva] = useState(null);
+  const [lightboxSrc, setLightboxSrc] = useState(null);
   const panelRef = useRef(null);
+  const isDesktop = useIsDesktop();
 
   const cambiarFiltro = useCallback((f) => {
     if (f === filtroActivo) return;
@@ -57,6 +72,14 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
       setImgActiva(producto.imagen);
     }
   };
+
+  // Cerrar el lightbox con Escape
+  useEffect(() => {
+    if (!lightboxSrc) return;
+    const onKey = (e) => { if (e.key === 'Escape') setLightboxSrc(null); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [lightboxSrc]);
 
   // Scroll suave al panel cuando abre
   useEffect(() => {
@@ -215,7 +238,11 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
                       <img
                         src={imgActiva || productoActivo.imagen}
                         alt={productoActivo.titulo}
-                        style={{ width: '100%', objectFit: 'contain', maxHeight: '520px', transition: 'opacity 0.25s' }}
+                        onClick={() => { if (isDesktop) setLightboxSrc(imgActiva || productoActivo.imagen); }}
+                        style={{
+                          width: '100%', objectFit: 'contain', maxHeight: '520px', transition: 'opacity 0.25s',
+                          cursor: isDesktop ? 'zoom-in' : 'default',
+                        }}
                       />
                     )}
                     {/* Miniaturas galería */}
@@ -334,6 +361,37 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
           </div>
         ))}
       </div>
+
+      {/* Lightbox — solo se renderiza en escritorio */}
+      {isDesktop && lightboxSrc && (
+        <div
+          onClick={() => setLightboxSrc(null)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)',
+            zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '2rem', cursor: 'zoom-out',
+          }}
+        >
+          <button
+            onClick={() => setLightboxSrc(null)}
+            aria-label="Cerrar"
+            style={{
+              position: 'absolute', top: '1.25rem', right: '1.5rem',
+              background: 'none', border: 'none', color: '#fff',
+              fontSize: '2.5rem', lineHeight: 1, cursor: 'pointer', padding: '0.5rem',
+            }}
+          >&times;</button>
+          <img
+            src={lightboxSrc}
+            alt={productoActivo?.titulo || ''}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '90vw', maxHeight: '90vh', width: 'auto', height: 'auto',
+              objectFit: 'contain', borderRadius: '4px', cursor: 'default',
+            }}
+          />
+        </div>
+      )}
 
       <style>{`
         @keyframes panelSlide {
