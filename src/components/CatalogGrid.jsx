@@ -367,7 +367,7 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
         <div
           onClick={() => setLightboxSrc(null)}
           style={{
-            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.9)',
+            position: 'fixed', inset: 0, background: 'rgba(250,250,250,0.97)',
             zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: '2rem', cursor: 'zoom-out',
           }}
@@ -377,19 +377,31 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
             aria-label="Cerrar"
             style={{
               position: 'absolute', top: '1.25rem', right: '1.5rem',
-              background: 'none', border: 'none', color: '#fff',
-              fontSize: '2.5rem', lineHeight: 1, cursor: 'pointer', padding: '0.5rem',
+              background: '#fff', border: '1px solid #e7e5e4', borderRadius: '50%',
+              color: '#1c1917', width: '44px', height: '44px',
+              fontSize: '1.75rem', lineHeight: 1, cursor: 'pointer', padding: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
             }}
           >&times;</button>
-          <img
-            src={lightboxSrc}
-            alt={productoActivo?.titulo || ''}
+          <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              maxWidth: '90vw', maxHeight: '90vh', width: 'auto', height: 'auto',
-              objectFit: 'contain', borderRadius: '4px', cursor: 'default',
+              background: '#fff', borderRadius: '8px', padding: '2rem',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+              maxWidth: '90vw', maxHeight: '90vh',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
-          />
+          >
+            <img
+              src={lightboxSrc}
+              alt={productoActivo?.titulo || ''}
+              style={{
+                maxWidth: '80vw', maxHeight: '80vh', width: 'auto', height: 'auto',
+                objectFit: 'contain', cursor: 'default', display: 'block',
+              }}
+            />
+          </div>
         </div>
       )}
 
