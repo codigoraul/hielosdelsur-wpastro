@@ -1,0 +1,708 @@
+---
+// Chat con IA de Chatia (chatbotia.cl) para Hielos del Sur: burbuja flotante abajo a la IZQUIERDA.
+// Backend: /chat.php (Gemini) + /chat-prompt.php (lo que sabe el bot). Ver public/.
+interface QuickReply { label: string; reply: string; }
+interface Props {
+  botName?: string;
+  botStatus?: string;
+  welcomeMessage?: string;
+  quickReplies?: QuickReply[];
+  disclaimer?: string;
+  vertical?: string;
+}
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const {
+  botName = "Asistente Hielos del Sur",
+  botStatus = "Asistente IA · en línea",
+  welcomeMessage = "¡Hola! 👋 Soy el asistente virtual de Hielos del Sur. Te puedo orientar con sillas, sillones, mesas, taburetes y bancas, y ayudarte a pedir una cotización. ¿En qué te ayudo?",
+  quickReplies = [
+    { label: "¿Qué productos fabrican?", reply: "" },
+    { label: "Quiero cotizar", reply: "" },
+    { label: "¿Dónde están y qué horario tienen?", reply: "" },
+  ],
+  disclaimer = "Asistente con inteligencia artificial: puede equivocarse. Para cotizar, escribe a ventas@hielosdelsur.cl o por WhatsApp al +569 6283 2038.",
+  vertical = "",
+} = Astro.props;
+---
+
+<div class="hds-chat" id="hdsChat" data-vertical={vertical} data-endpoint={`${base}/chat.php`} data-avatar={`${base}/favicon.svg`}>
+  <!-- Botón flotante -->
+  <button type="button" class="hds-chat-bubble" id="hdsChatBubble" aria-label="Abrir chat con IA">
+    <span class="hds-chat-bubble-icon">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8M8 13h6"/><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-5l-5 3v-3H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h12z"/></svg>
+    </span>
+    <span class="hds-chat-ping"></span>
+  </button>
+
+  <!-- Globo de invitación -->
+  <div class="hds-chat-teaser" id="hdsChatTeaser">
+    <span>👋 Prueba el chatbot con IA aquí</span>
+  </div>
+
+  <!-- Panel de chat -->
+  <div class="hds-chat-panel" id="hdsChatPanel" role="dialog" aria-label="Chat de demostración con inteligencia artificial">
+    <div class="hds-chat-header">
+      <div class="hds-chat-avatar">
+        <img src={`${base}/favicon.svg`} alt="" width="42" height="42">
+      </div>
+      <span class="hds-chat-sep"></span>
+      <div class="hds-chat-header-text">
+        <strong>{botName}</strong>
+      </div>
+      <span class="hds-chat-pill" title={botStatus}>Bot IA</span>
+      <button type="button" class="hds-chat-close" id="hdsChatClose" aria-label="Cerrar chat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="hds-chat-body" id="hdsChatBody">
+      <div class="hds-chat-row hds-chat-row-bot">
+        <div class="hds-chat-avatar-sm"><img src={`${base}/favicon.svg`} alt="" width="28" height="28"></div>
+        <div class="hds-chat-bubble-wrap">
+          <div class="hds-chat-msg hds-chat-msg-bot">{welcomeMessage}</div>
+          <span class="hds-chat-time" data-now></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hds-chat-quick" id="hdsChatQuick">
+      {quickReplies.map((qr) => (
+        <button type="button" class="hds-chat-quick-btn" data-reply={qr.reply}>{qr.label}</button>
+      ))}
+    </div>
+
+    <p class="hds-chat-disclaimer">{disclaimer}</p>
+    <p class="hds-chat-privacy">Si nos dejas tu nombre y contacto, los usamos solo para responderte. Puedes pedir que los eliminemos cuando quieras.</p>
+
+    <form class="hds-chat-input-row" id="hdsChatForm">
+      <textarea id="hdsChatInput" placeholder="Escribe tu mensaje acá" autocomplete="off" rows="1"></textarea>
+      <button type="submit" aria-label="Enviar mensaje">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14 21 3M21 3l-6.5 18a.55.55 0 0 1-1 0L10 14l-7-3.5a.55.55 0 0 1 0-1z"/></svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+<style is:global>
+  .hds-chat {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 1050;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  /* Burbuja flotante */
+  .hds-chat-bubble {
+    position: relative;
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: #8B7355;
+    box-shadow: 0 12px 30px rgba(139, 115, 85, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .hds-chat-bubble:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 16px 36px rgba(139, 115, 85, 0.55);
+  }
+
+  .hds-chat-bubble-icon svg {
+    display: block;
+    color: #ffffff;
+  }
+
+  .hds-chat-ping {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ff5c5c;
+    border: 2px solid #ffffff;
+    animation: hds-chat-pulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes hds-chat-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.25); opacity: 0.7; }
+  }
+
+  /* Globo invitación */
+  .hds-chat-teaser {
+    position: absolute;
+    bottom: 78px;
+    left: 0;
+    background: #ffffff;
+    color: #2D333A;
+    padding: 10px 16px;
+    border-radius: 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 8px 20px rgba(45, 51, 58, 0.18);
+    animation: hds-chat-float 3s ease-in-out infinite, hds-chat-fadein 0.6s ease 6s both;
+  }
+
+  .hds-chat-teaser::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 24px;
+    width: 12px;
+    height: 12px;
+    background: #ffffff;
+    transform: rotate(45deg);
+  }
+
+  @keyframes hds-chat-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @keyframes hds-chat-fadein {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hds-chat.is-open .hds-chat-teaser,
+  .hds-chat.was-opened .hds-chat-teaser {
+    display: none;
+  }
+
+  /* Panel de chat */
+  .hds-chat-panel {
+    position: absolute;
+    bottom: 84px;
+    left: 0;
+    width: min(370px, 92vw);
+    max-height: min(580px, 78vh);
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .hds-chat.is-open .hds-chat-panel {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  .hds-chat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #8B7355;
+    color: #ffffff;
+  }
+
+  .hds-chat-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .hds-chat-avatar img,
+  .hds-chat-avatar-sm img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .hds-chat-avatar {
+    font-size: 1.3rem;
+    line-height: 1;
+  }
+
+  .hds-chat-header-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+  }
+
+  .hds-chat-header-text strong {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.2px;
+  }
+
+  .hds-chat-sep {
+    width: 1px;
+    height: 26px;
+    background: rgba(45, 51, 58, 0.35);
+    flex-shrink: 0;
+  }
+
+  .hds-chat-pill {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border: 1.5px solid #2D333A;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .hds-chat-dot { display: none; }
+
+  .hds-chat-close {
+    background: transparent;
+    border: none;
+    color: #2D333A;
+    opacity: 0.8;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .hds-chat-close:hover {
+    opacity: 1;
+  }
+
+  .hds-chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: #ffffff;
+    min-height: 140px;
+  }
+
+  /* Fila de mensaje: avatar + burbuja + hora */
+  .hds-chat-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    max-width: 100%;
+  }
+
+  .hds-chat-row-bot {
+    align-self: flex-start;
+    flex-direction: row;
+  }
+
+  .hds-chat-row-user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .hds-chat-avatar-sm {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #8B7355;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .hds-chat-avatar-sm {
+    font-size: 0.95rem;
+    line-height: 1;
+  }
+
+  .hds-chat-bubble-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 8px;
+    max-width: calc(100% - 36px);
+  }
+
+  .hds-chat-row-user .hds-chat-bubble-wrap {
+    flex-direction: row-reverse;
+    max-width: 100%;
+  }
+
+  .hds-chat-row-bot .hds-chat-bubble-wrap {
+    justify-content: flex-start;
+  }
+
+  .hds-chat-msg {
+    padding: 11px 15px;
+    border-radius: 16px;
+    font-size: 0.92rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .hds-chat-msg-bot {
+    background: #E9E9EB;
+    color: #2D333A;
+    border-bottom-left-radius: 4px;
+  }
+
+  .hds-chat-msg-user {
+    background: #8B7355;
+    color: #ffffff;
+    border-bottom-right-radius: 4px;
+  }
+
+  .hds-chat-time {
+    font-size: 0.68rem;
+    color: #8a8a90;
+    padding-bottom: 2px;
+    flex-shrink: 0;
+  }
+
+  .hds-chat-typing-row {
+    align-self: flex-start;
+  }
+
+  .hds-chat-typing {
+    display: flex;
+    gap: 4px;
+    padding: 14px 15px;
+    background: #E9E9EB;
+    border-radius: 16px;
+    border-bottom-left-radius: 4px;
+  }
+
+  .hds-chat-typing span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #9aa8c7;
+    animation: hds-chat-typing 1.2s infinite ease-in-out;
+  }
+
+  .hds-chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+  .hds-chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes hds-chat-typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  .hds-chat-quick {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 14px 4px;
+    background: #ffffff;
+  }
+
+  .hds-chat-quick-btn {
+    text-align: left;
+    background: #ffffff;
+    color: #2D333A;
+    border: 1px solid #D9D9DD;
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .hds-chat-quick-btn:hover {
+    border-color: #8B7355;
+    background: #F6F1EA;
+  }
+
+  .hds-chat-disclaimer {
+    font-size: 0.66rem;
+    color: #9a9aa0;
+    text-align: center;
+    margin: 0;
+    padding: 6px 16px 2px;
+    background: #ffffff;
+  }
+
+  .hds-chat-privacy {
+    font-size: 0.62rem;
+    color: #b0b0b6;
+    text-align: center;
+    margin: 0;
+    padding: 0 16px 6px;
+    background: #ffffff;
+  }
+
+  .hds-chat-input-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin: 6px 12px 12px;
+    padding: 5px 5px 5px 16px;
+    background: #ffffff;
+    border: 1.5px solid #D9D9DD;
+    border-radius: 26px;
+    transition: border-color 0.15s ease;
+  }
+
+  .hds-chat-input-row:focus-within {
+    border-color: #8B7355;
+  }
+
+  .hds-chat-input-row textarea {
+    flex: 1;
+    min-width: 0;
+    resize: none;
+    border: none;
+    background: transparent;
+    padding: 8px 0;
+    font-size: 0.92rem;
+    font-family: inherit;
+    line-height: 1.3;
+    max-height: 110px;
+    overflow-y: auto;
+    outline: none;
+    color: #2D333A;
+  }
+
+  .hds-chat-input-row textarea::placeholder {
+    color: #9a9aa0;
+  }
+
+  
+
+  .hds-chat-input-row button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #8B7355;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    .hds-chat {
+      bottom: 16px;
+      left: 16px;
+    }
+    .hds-chat-panel {
+      width: 92vw;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const root = document.getElementById('hdsChat');
+    const bubble = document.getElementById('hdsChatBubble');
+    const closeBtn = document.getElementById('hdsChatClose');
+    const body = document.getElementById('hdsChatBody');
+    const quickWrap = document.getElementById('hdsChatQuick');
+    const form = document.getElementById('hdsChatForm');
+    const input = document.getElementById('hdsChatInput');
+
+    if (!root || !bubble || !body || !form || !input) return;
+    const AVATAR = root.dataset.avatar || '/favicon.svg';
+    const ENDPOINT = root.dataset.endpoint || '/chat.php';
+
+    function scrollToEnd() {
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function formatTime() {
+      var d = new Date();
+      var h = d.getHours().toString().padStart(2, '0');
+      var m = d.getMinutes().toString().padStart(2, '0');
+      return h + ':' + m;
+    }
+
+    // Marca la hora del mensaje de bienvenida que viene renderizado desde el server.
+    var initialTime = body.querySelector('[data-now]');
+    if (initialTime) initialTime.textContent = formatTime();
+
+    function addMessage(text, who) {
+      const isUser = who === 'user';
+      const row = document.createElement('div');
+      row.className = 'hds-chat-row ' + (isUser ? 'hds-chat-row-user' : 'hds-chat-row-bot');
+
+      if (!isUser) {
+        const avatar = document.createElement('div');
+        avatar.className = 'hds-chat-avatar-sm';
+        avatar.innerHTML = '<img src={`${base}/favicon.svg`} alt="" width="28" height="28">';
+        row.appendChild(avatar);
+      }
+
+      const wrap = document.createElement('div');
+      wrap.className = 'hds-chat-bubble-wrap';
+
+      const bubbleEl = document.createElement('div');
+      bubbleEl.className = 'hds-chat-msg ' + (isUser ? 'hds-chat-msg-user' : 'hds-chat-msg-bot');
+      bubbleEl.textContent = text;
+
+      const time = document.createElement('span');
+      time.className = 'hds-chat-time';
+      time.textContent = formatTime();
+
+      wrap.appendChild(bubbleEl);
+      wrap.appendChild(time);
+      row.appendChild(wrap);
+
+      body.appendChild(row);
+      scrollToEnd();
+    }
+
+    function showTyping() {
+      const row = document.createElement('div');
+      row.className = 'hds-chat-row hds-chat-row-bot hds-chat-typing-row';
+      row.id = 'hdsChatTypingIndicator';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'hds-chat-avatar-sm';
+      avatar.innerHTML = '<img src={`${base}/favicon.svg`} alt="" width="28" height="28">';
+
+      const typing = document.createElement('div');
+      typing.className = 'hds-chat-typing';
+      typing.innerHTML = '<span></span><span></span><span></span>';
+
+      row.appendChild(avatar);
+      row.appendChild(typing);
+      body.appendChild(row);
+      scrollToEnd();
+    }
+
+    function hideTyping() {
+      const el = document.getElementById('hdsChatTypingIndicator');
+      if (el) el.remove();
+    }
+
+    // Historial de la conversación, en el mismo formato que espera chat.php
+    var history = [];
+
+    // Id de conversación: uno por sesión de navegador, para agrupar los
+    // mensajes de una misma visita en el historial del servidor.
+    function getConversationId() {
+      try {
+        var id = sessionStorage.getItem('hdsChatConvId');
+        if (!id) {
+          id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+          sessionStorage.setItem('hdsChatConvId', id);
+        }
+        return id;
+      } catch (e) {
+        return 'no-storage-' + Date.now();
+      }
+    }
+    var conversationId = getConversationId();
+
+    var FALLBACK_REPLY = "Ahora mismo no puedo responder. Escríbenos por el formulario más abajo y te contactamos. 📋";
+
+    function stripLightMarkdown(text) {
+      // Quita ** y * de negrita/énfasis que a veces devuelve el modelo.
+      return String(text)
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/(^|[^\w])\*(?!\s)(.*?)(?<!\s)\*(?!\w)/g, '$1$2');
+    }
+
+    async function askChat(text, hist) {
+      const res = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, history: hist, conversationId: conversationId, vertical: (root && root.dataset.vertical) || '' }),
+      });
+      return res.json();
+    }
+
+    async function sendMessage(text) {
+      if (!text) return;
+      addMessage(text, 'user');
+      history.push({ role: 'user', text: text });
+      showTyping();
+      const hist = history.slice(-8);
+
+      try {
+        let data = await askChat(text, hist);
+        // Reintento silencioso: la capa gratuita de Gemini a veces falla una
+        // consulta puntual por sobrecarga momentánea — un segundo intento suele bastar.
+        if (!data || !data.reply) {
+          data = await askChat(text, hist);
+        }
+        hideTyping();
+        const reply = (data && data.reply) ? stripLightMarkdown(data.reply) : FALLBACK_REPLY;
+        addMessage(reply, 'bot');
+        history.push({ role: 'model', text: reply });
+      } catch (err) {
+        hideTyping();
+        addMessage(FALLBACK_REPLY, 'bot');
+      }
+    }
+
+    root.querySelectorAll('.hds-chat-quick-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const question = btn.textContent || '';
+        if (quickWrap) quickWrap.style.display = 'none';
+        sendMessage(question);
+      });
+    });
+
+    function resetInputHeight() {
+      input.style.height = 'auto';
+    }
+
+    function autoResizeInput() {
+      input.style.height = 'auto';
+      input.style.height = Math.min(input.scrollHeight, 110) + 'px';
+    }
+
+    input.addEventListener('input', autoResizeInput);
+
+    // En textarea, Enter envía el mensaje; Shift+Enter agrega un salto de línea.
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit', { cancelable: true }));
+      }
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const value = input.value.trim();
+      if (!value) return;
+      input.value = '';
+      resetInputHeight();
+      if (quickWrap) quickWrap.style.display = 'none';
+      sendMessage(value);
+    });
+
+    bubble.addEventListener('click', function () {
+      root.classList.toggle('is-open');
+      root.classList.add('was-opened');
+      if (root.classList.contains('is-open')) {
+        input.focus();
+      }
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        root.classList.remove('is-open');
+      });
+    }
+  })();
+</script>

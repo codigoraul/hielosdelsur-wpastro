@@ -26,6 +26,14 @@ jobs:
       - name: Build Astro site
         run: npm run build
 
+      - name: Crear gemini-key.php
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -n "$GEMINI_API_KEY" ]; then
+            printf "<?php return '%s';\n" "$GEMINI_API_KEY" > dist/gemini-key.php
+          fi
+
       - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -41,3 +49,4 @@ jobs:
             wp-content/**
             .well-known/**
             error_log
+            chat-data/**
