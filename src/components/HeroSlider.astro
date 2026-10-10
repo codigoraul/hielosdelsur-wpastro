@@ -113,6 +113,10 @@ const slides = [
     border-radius: 2px; box-shadow: 0 4px 14px rgba(0,0,0,0.3);
   }
   .slide-cta svg { width: 0.95rem; height: 0.95rem; }
+  @media (max-width: 767px) {
+    .slide-title { font-size: clamp(2.7rem, 12vw, 3.4rem); line-height: 1.05; margin-bottom: 1rem; }
+    .slide-tag { font-size: 0.9rem; }
+  }
   @media (max-width: 640px) {
     .slide-cta { padding: 0.7rem 1.4rem; }
     .slide-desc { margin-bottom: 1.75rem; }
