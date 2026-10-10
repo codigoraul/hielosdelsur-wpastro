@@ -40,5 +40,4 @@ jobs:
             admin/**
             wp-content/**
             .well-known/**
-            mantenimiento.html
             error_log
