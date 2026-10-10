@@ -50,7 +50,7 @@ const slides = [
 
       <!-- Contenido -->
       <div class="relative z-10 h-full flex items-center w-full">
-        <div style="max-width:1280px;width:100%;margin:0 auto;padding:0 4rem">
+        <div class="slide-inner" style="max-width:1280px;width:100%;margin:0 auto;padding:0 4rem">
           <p class="text-[#c8a96e] text-xs md:text-sm font-semibold tracking-[0.3em] uppercase mb-3 opacity-0 slide-tag">
             {slide.title}
           </p>
@@ -114,8 +114,14 @@ const slides = [
   }
   .slide-cta svg { width: 0.95rem; height: 0.95rem; }
   @media (max-width: 767px) {
-    .slide-title { font-size: clamp(2rem, 8.7vw, 3rem); line-height: 1.1; margin-bottom: 1rem; }
+    /* Título en una sola línea: el más grande que cabe (tope 3rem = tamaño tablet) */
+    .slide-inner { padding: 0 1.25rem !important; }
+    .slide-title { white-space: nowrap; font-size: min(3rem, calc((100vw - 2.5rem) / 10.2)); line-height: 1.1; margin-bottom: 1rem; }
     .slide-tag { font-size: 0.9rem; }
+    /* Flechas abajo en las esquinas para no tapar el texto */
+    #prev-btn, #next-btn { top: auto; bottom: 0.9rem; translate: none; transform: none; width: 2.5rem; height: 2.5rem; }
+    #prev-btn { left: 1rem; }
+    #next-btn { right: 1rem; }
   }
   @media (max-width: 640px) {
     .slide-cta { padding: 0.7rem 1.4rem; }
