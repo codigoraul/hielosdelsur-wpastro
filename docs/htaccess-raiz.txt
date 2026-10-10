@@ -4,6 +4,13 @@
 # Generado 09-10-2026 a partir de redirecciones-301-hielosdelsur.xlsx
 # ============================================================
 
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the "ea-php74" package as the default "PHP" programming language (necesario para /admin headless)
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php74 .php .php7 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
+
 DirectoryIndex index.html
 Options -Indexes
 ErrorDocument 404 /404.html

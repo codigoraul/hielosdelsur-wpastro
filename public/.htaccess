@@ -3,7 +3,7 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /muestra/
+  RewriteBase /
   
   # Redirigir a index.html si existe
   RewriteCond %{REQUEST_FILENAME} !-f
