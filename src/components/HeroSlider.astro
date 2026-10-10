@@ -101,6 +101,23 @@ const slides = [
 </section>
 
 <style>
+  /* El reset global (* { padding:0; margin:0 }) pisa las utilidades de Tailwind v4,
+     por eso el espaciado y el tamaño del botón se definen aquí. */
+  .slide-tag   { margin-bottom: 1rem; font-size: clamp(0.85rem, 1.2vw, 1rem); font-weight: 600; color: #e0c48a; text-shadow: 0 1px 8px rgba(0,0,0,0.6); }
+  .slide-title { margin-bottom: 1.25rem; text-shadow: 0 2px 16px rgba(0,0,0,0.45); }
+  .slide-desc  { margin-bottom: 2.5rem; max-width: 38rem; font-size: clamp(1.05rem, 1.6vw, 1.3rem); line-height: 1.5; color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,0.6); }
+  .slide-cta {
+    display: inline-flex; align-items: center; gap: 0.85rem;
+    padding: 1.15rem 2.75rem; min-height: 3.5rem;
+    font-size: clamp(0.9rem, 1.2vw, 1.05rem); letter-spacing: 0.14em;
+    border-radius: 2px; box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  }
+  .slide-cta svg { width: 1.25rem; height: 1.25rem; }
+  @media (max-width: 640px) {
+    .slide-cta { padding: 1rem 1.75rem; width: 100%; justify-content: center; max-width: 22rem; }
+    .slide-desc { margin-bottom: 1.75rem; }
+  }
+
   .slide.active .slide-tag  { animation: fadeUp 0.7s 0.2s ease forwards; }
   .slide.active .slide-title { animation: fadeUp 0.7s 0.4s ease forwards; }
   .slide.active .slide-desc  { animation: fadeUp 0.7s 0.6s ease forwards; }

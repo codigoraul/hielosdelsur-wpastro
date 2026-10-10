@@ -38,7 +38,7 @@ const useYoast = yoastData !== null;
     
     {useYoast ? (
       <!-- SEO desde Yoast -->
-      <YoastSEO yoastData={yoastData} />
+      <YoastSEO yoastData={yoastData} canonicalURL={canonicalURL} />
     ) : (
       <>
         <!-- SEO manual (fallback) -->

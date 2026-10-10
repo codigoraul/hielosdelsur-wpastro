@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 
+const BASE = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
+
 function useCols() {
   const [cols, setCols] = useState(6);
   useEffect(() => {
@@ -195,14 +197,20 @@ export default function CatalogGrid({ productos = [], filtros = [] }) {
                       </span>
                     </div>
                   </div>
-                  {/* Título */}
+                  {/* Título — enlace real a la ficha (indexable por Google) */}
                   <p style={{
                     marginTop: '0.5rem',
                     fontSize: '0.72rem',
                     fontWeight: '600',
                     color: '#1c1917',
                   }}>
-                    {producto.titulo}
+                    <a
+                      href={`${BASE}producto/${producto.slug}/`}
+                      onClick={e => e.stopPropagation()}
+                      style={{ color: 'inherit', textDecoration: 'none' }}
+                    >
+                      {producto.titulo}
+                    </a>
                   </p>
                 </div>
                 );

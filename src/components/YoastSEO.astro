@@ -1,9 +1,10 @@
 ---
 interface Props {
   yoastData?: any;
+  canonicalURL?: URL | string;
 }
 
-const { yoastData } = Astro.props;
+const { yoastData, canonicalURL } = Astro.props;
 
 // Si no hay datos de Yoast, no renderizar nada
 if (!yoastData) {
@@ -11,20 +12,33 @@ if (!yoastData) {
 }
 
 const {
-  title,
+  title: rawTitle,
   description,
-  canonical,
-  og_title,
+  og_title: rawOgTitle,
   og_description,
   og_image,
   og_type,
-  og_url,
   twitter_card,
-  twitter_title,
+  twitter_title: rawTwitterTitle,
   twitter_description,
   twitter_image,
   robots,
 } = yoastData;
+
+// Yoast viene del WordPress headless (/admin): el título trae el nombre del sitio WP
+// ("- hielosdelsur-astro", "archivos") y canonical/og:url apuntan a /admin/.
+// Se limpia el título y se usa la URL propia de la página como canonical.
+function limpiarTitulo(t: string | undefined) {
+  if (!t) return t;
+  return t
+    .replace(/\s+archivos\s*[-–—]\s*hielosdelsur-astro$/i, ' — Hielos del Sur')
+    .replace(/\s*[-–—]\s*hielosdelsur-astro$/i, ' — Hielos del Sur');
+}
+const title = limpiarTitulo(rawTitle);
+const og_title = limpiarTitulo(rawOgTitle);
+const twitter_title = limpiarTitulo(rawTwitterTitle);
+const canonical = canonicalURL ? String(canonicalURL) : undefined;
+const og_url = canonical;
 ---
 
 {title && <title>{title}</title>}

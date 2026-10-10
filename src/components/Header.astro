@@ -65,7 +65,7 @@ const catalogItems = [
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div class="nav-dropdown" style="position:absolute; top:100%; left:0; width:200px; background:#fff; border:1px solid #e7e5e4; box-shadow:0 10px 30px rgba(0,0,0,0.12); border-radius:0 0 8px 8px; z-index:50; overflow:hidden">
+              <div class="nav-dropdown" style="position:absolute; top:100%; left:0; width:200px; background:#fff; border:1px solid #e7e5e4; box-shadow:0 10px 30px rgba(0,0,0,0.12); border-radius:0 0 8px 8px; z-index:50; overflow:hidden; opacity:0; visibility:hidden; transform:translateY(-6px); transition:opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0.25s">
                 {catalogItems.map((cat) => (
                   <a href={cat.href} style="display:block; padding:0.75rem 1.25rem; font-family:'Inter',sans-serif; font-size:0.75rem; font-weight:400; letter-spacing:0.08em; text-transform:uppercase; color:#57534e; text-decoration:none; border-bottom:1px solid #f5f5f4; transition:background 0.15s, color 0.15s"
                     onmouseover="this.style.background='#F7F5F2';this.style.color='#8B7355'"
@@ -160,8 +160,12 @@ const catalogItems = [
     #menu-btn         { display: none !important; }
   }
 
-  .nav-dropdown { display: none; }
-  .nav-parent:hover .nav-dropdown { display: block; }
+  .nav-parent:hover .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0s;
+  }
   .nav-chevron { transition: transform 0.2s; }
   .nav-parent:hover .nav-chevron { transform: rotate(180deg); }
 </style>

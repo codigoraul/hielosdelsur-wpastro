@@ -35,3 +35,10 @@ jobs:
           local-dir: ./dist/
           server-dir: /
           dangerous-clean-slate: false
+          exclude: |
+            **/.git*/**
+            admin/**
+            wp-content/**
+            .well-known/**
+            mantenimiento.html
+            error_log

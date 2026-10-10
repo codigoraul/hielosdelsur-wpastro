@@ -1,15 +1,14 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
-
-const isProd = process.env.NODE_ENV === 'production';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://hielosdelsur.cl',
-  base: isProd ? '/muestra' : undefined,
   output: 'static',
   integrations: [
     react(),
+    sitemap(),
   ],
   vite: {
     plugins: [tailwindcss()],
