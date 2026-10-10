@@ -1,12 +1,238 @@
+# ============================================================
+# .htaccess RAÍZ hielosdelsur.cl — sitio Astro estático
+# Reemplaza al .htaccess del WordPress viejo. NO tocar /admin/ (tiene su propio .htaccess).
+# Generado 09-10-2026 a partir de redirecciones-301-hielosdelsur.xlsx
+# ============================================================
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the "ea-php74" package as the default "PHP" programming language (necesario para /admin headless)
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php74 .php .php7 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
+
 DirectoryIndex index.html
 Options -Indexes
+ErrorDocument 404 /404.html
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  
-  # Redirigir a index.html si existe
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.*)$ index.html [L]
+
+  # Forzar HTTPS y sin www
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^(.*)$ https://hielosdelsur.cl/$1 [R=301,L]
+
+  # No tocar el WordPress headless
+  RewriteRule ^admin(/.*)?$ - [L]
+
+  # Astro genera carpetas con index.html: /producto/silla-tita/ -> existe.
+  # Si piden sin barra final y existe la carpeta, redirigir con barra (una sola URL canónica)
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteRule ^(.*)$ /$1/ [R=301,L]
 </IfModule>
+
+# ---------- 301 productos: WP viejo (/cubeportfolio/) -> fichas Astro (/producto/) ----------
+RedirectMatch 301 ^/cubeportfolio/base-2-discos/?$ /producto/base-2-discos/
+RedirectMatch 301 ^/cubeportfolio/base-hs-001/?$ /producto/base-hs-001/
+RedirectMatch 301 ^/cubeportfolio/base-hs-004/?$ /producto/base-hs-004/
+RedirectMatch 301 ^/cubeportfolio/base-hs-005/?$ /producto/base-hs-005/
+RedirectMatch 301 ^/cubeportfolio/base-integrada/?$ /producto/base-integrada/
+RedirectMatch 301 ^/cubeportfolio/base-tope-regulable/?$ /producto/base-tope-regulable/
+RedirectMatch 301 ^/cubeportfolio/cubiertas-formalita/?$ /producto/cubiertas-formalita/
+RedirectMatch 301 ^/cubeportfolio/cubiertas-madera-solida/?$ /producto/cubiertas-madera-solida/
+RedirectMatch 301 ^/cubeportfolio/cubiertas-topalit/?$ /producto/cubiertas-topalit/
+RedirectMatch 301 ^/cubeportfolio/hs-012-55/?$ /producto/hs-012-55/
+RedirectMatch 301 ^/cubeportfolio/poltrona-berta/?$ /producto/poltrona-berta/
+RedirectMatch 301 ^/cubeportfolio/poltrona-jet/?$ /producto/poltrona-jet/
+RedirectMatch 301 ^/cubeportfolio/poltrona-no5/?$ /producto/poltrona-no5/
+RedirectMatch 301 ^/cubeportfolio/poltrona-oca/?$ /producto/poltrona-oca/
+RedirectMatch 301 ^/cubeportfolio/poltrona-paco/?$ /producto/poltrona-paco/
+RedirectMatch 301 ^/cubeportfolio/poltrona-tonic/?$ /producto/poltrona-tonic/
+RedirectMatch 301 ^/cubeportfolio/silla-agu/?$ /producto/silla-agu/
+RedirectMatch 301 ^/cubeportfolio/silla-atila/?$ /producto/silla-atila/
+RedirectMatch 301 ^/cubeportfolio/silla-camila/?$ /producto/silla-camila/
+RedirectMatch 301 ^/cubeportfolio/silla-escondida/?$ /producto/silla-escondida/
+RedirectMatch 301 ^/cubeportfolio/silla-fiona/?$ /producto/silla-fiona/
+RedirectMatch 301 ^/cubeportfolio/silla-ginevra/?$ /producto/silla-ginevra/
+RedirectMatch 301 ^/cubeportfolio/silla-io/?$ /producto/silla-io/
+RedirectMatch 301 ^/cubeportfolio/silla-k/?$ /producto/silla-k/
+RedirectMatch 301 ^/cubeportfolio/silla-kaho/?$ /producto/silla-kaho/
+RedirectMatch 301 ^/cubeportfolio/silla-kyra/?$ /producto/silla-kyra/
+RedirectMatch 301 ^/cubeportfolio/silla-laila/?$ /producto/silla-laila/
+RedirectMatch 301 ^/cubeportfolio/silla-lama/?$ /producto/silla-lama/
+RedirectMatch 301 ^/cubeportfolio/silla-lisboa/?$ /producto/silla-lisboa/
+RedirectMatch 301 ^/cubeportfolio/silla-luli/?$ /producto/silla-luli/
+RedirectMatch 301 ^/cubeportfolio/silla-maule/?$ /producto/silla-maule/
+RedirectMatch 301 ^/cubeportfolio/silla-menta/?$ /producto/silla-menta/
+RedirectMatch 301 ^/cubeportfolio/silla-navy/?$ /producto/silla-navy/
+RedirectMatch 301 ^/cubeportfolio/silla-neutra/?$ /producto/silla-neutra/
+RedirectMatch 301 ^/cubeportfolio/silla-nino-100/?$ /producto/silla-nino-100/
+RedirectMatch 301 ^/cubeportfolio/silla-nino/?$ /producto/silla-nino/
+RedirectMatch 301 ^/cubeportfolio/silla-onda/?$ /producto/silla-onda/
+RedirectMatch 301 ^/cubeportfolio/silla-roma/?$ /producto/silla-roma/
+RedirectMatch 301 ^/cubeportfolio/silla-sai/?$ /producto/silla-sai/
+RedirectMatch 301 ^/cubeportfolio/silla-susi/?$ /producto/silla-susi/
+RedirectMatch 301 ^/cubeportfolio/silla-tacita/?$ /producto/silla-tacita/
+RedirectMatch 301 ^/cubeportfolio/silla-tamara/?$ /producto/silla-tamara/
+RedirectMatch 301 ^/cubeportfolio/silla-tatami/?$ /producto/silla-tatami/
+RedirectMatch 301 ^/cubeportfolio/silla-tita/?$ /producto/silla-tita/
+RedirectMatch 301 ^/cubeportfolio/silla-trama/?$ /producto/silla-trama/
+RedirectMatch 301 ^/cubeportfolio/silla-udd/?$ /producto/silla-udd/
+RedirectMatch 301 ^/cubeportfolio/silla-victoria/?$ /producto/silla-victoria/
+RedirectMatch 301 ^/cubeportfolio/silla-wind/?$ /producto/silla-wind/
+RedirectMatch 301 ^/cubeportfolio/sillon-ciudad/?$ /producto/sillon-ciudad/
+RedirectMatch 301 ^/cubeportfolio/sillon-coccolona/?$ /producto/sillon-coccolona/
+RedirectMatch 301 ^/cubeportfolio/sillon-hernan/?$ /producto/sillon-hernan/
+RedirectMatch 301 ^/cubeportfolio/sillon-pole/?$ /producto/sillon-pole/
+RedirectMatch 301 ^/cubeportfolio/sofa-olimpo/?$ /producto/sofa-olimpo/
+RedirectMatch 301 ^/cubeportfolio/taburete-angel/?$ /producto/taburete-angel/
+RedirectMatch 301 ^/cubeportfolio/taburete-bakhita/?$ /producto/taburete-bakhita/
+RedirectMatch 301 ^/cubeportfolio/taburete-bar/?$ /producto/taburete-bar/
+RedirectMatch 301 ^/cubeportfolio/taburete-barcino/?$ /producto/taburete-barcino/
+RedirectMatch 301 ^/cubeportfolio/taburete-camila/?$ /producto/taburete-camila/
+RedirectMatch 301 ^/cubeportfolio/taburete-capri/?$ /producto/taburete-capri/
+RedirectMatch 301 ^/cubeportfolio/taburete-cinze/?$ /producto/taburete-cinze/
+RedirectMatch 301 ^/cubeportfolio/taburete-ciudad/?$ /producto/taburete-ciudad/
+RedirectMatch 301 ^/cubeportfolio/taburete-io/?$ /producto/taburete-io/
+RedirectMatch 301 ^/cubeportfolio/taburete-lisboa/?$ /producto/taburete-lisboa/
+RedirectMatch 301 ^/cubeportfolio/taburete-manta-tubo/?$ /producto/taburete-manta-tubo/
+RedirectMatch 301 ^/cubeportfolio/taburete-manta/?$ /producto/taburete-manta/
+RedirectMatch 301 ^/cubeportfolio/taburete-maule/?$ /producto/taburete-maule/
+RedirectMatch 301 ^/cubeportfolio/taburete-navy/?$ /producto/taburete-navy/
+RedirectMatch 301 ^/cubeportfolio/taburete-nitro/?$ /producto/taburete-nitro/
+RedirectMatch 301 ^/cubeportfolio/taburete-rick/?$ /producto/taburete-rick/
+RedirectMatch 301 ^/cubeportfolio/taburete-roma/?$ /producto/taburete-roma/
+RedirectMatch 301 ^/cubeportfolio/taburete-subway/?$ /producto/taburete-subway/
+RedirectMatch 301 ^/cubeportfolio/taburete-udd/?$ /producto/taburete-udd/
+RedirectMatch 301 ^/cubeportfolio/taburete-verio/?$ /producto/taburete-verio/
+RedirectMatch 301 ^/cubeportfolio/silla-bali-art-201/?$ /producto/silla-bali/
+RedirectMatch 301 ^/cubeportfolio/silla-capri-116/?$ /producto/silla-capri/
+RedirectMatch 301 ^/cubeportfolio/silla-de-ninos/?$ /producto/silla-nino/
+RedirectMatch 301 ^/cubeportfolio/silla-iso-tapiz/?$ /producto/silla-iso-tapizada/
+RedirectMatch 301 ^/cubeportfolio/silla-k-hielos-del-sur/?$ /producto/silla-k/
+RedirectMatch 301 ^/cubeportfolio/silla-madera-hs-517/?$ /producto/silla-hs-517/
+RedirectMatch 301 ^/cubeportfolio/silla-madera-london/?$ /producto/silla-london/
+RedirectMatch 301 ^/cubeportfolio/silla-madera-nino/?$ /producto/silla-nino/
+RedirectMatch 301 ^/cubeportfolio/silla-maripos/?$ /producto/silla-mariposa/
+RedirectMatch 301 ^/cubeportfolio/silla-prisma-hielos-del-sur/?$ /producto/silla-prisma/
+RedirectMatch 301 ^/cubeportfolio/silla-roma-2/?$ /producto/silla-roma/
+RedirectMatch 301 ^/cubeportfolio/silla-samia-hielos-del-sur/?$ /producto/silla-samia/
+RedirectMatch 301 ^/cubeportfolio/silla-silvia-hielos-del-sur/?$ /producto/silla-silvia/
+RedirectMatch 301 ^/cubeportfolio/silla-verio-logo/?$ /producto/silla-verio/
+RedirectMatch 301 ^/cubeportfolio/taburete-capri-2/?$ /producto/taburete-capri/
+RedirectMatch 301 ^/cubeportfolio/taburete-roma-2/?$ /producto/taburete-roma/
+RedirectMatch 301 ^/cubeportfolio/base-un-disco/?$ /producto/base-1-disco/
+RedirectMatch 301 ^/cubeportfolio/silla-capri-a-logo/?$ /producto/silla-capri/
+RedirectMatch 301 ^/cubeportfolio/silla-capri-b/?$ /producto/silla-capri/
+RedirectMatch 301 ^/cubeportfolio/silla-iso-art-204-pp/?$ /producto/silla-io/
+RedirectMatch 301 ^/cubeportfolio/silla-mariposa-2-hielos-del-sur/?$ /producto/silla-mariposa/
+RedirectMatch 301 ^/cubeportfolio/silla-naty/?$ /producto/silla-navy/
+RedirectMatch 301 ^/cubeportfolio/silla-rob/?$ /producto/silla-rio/
+RedirectMatch 301 ^/cubeportfolio/silla-sisi/?$ /producto/silla-susi/
+RedirectMatch 301 ^/cubeportfolio/taburete-day/?$ /producto/taburete-navy/
+RedirectMatch 301 ^/cubeportfolio/taburete-divo/?$ /producto/taburete-io/
+RedirectMatch 301 ^/cubeportfolio/taburete-hs-1320/?$ /producto/taburete-hs-340/
+RedirectMatch 301 ^/cubeportfolio/taburete-hs-31-hielos-del-sur/?$ /producto/taburete-hs-817/
+RedirectMatch 301 ^/cubeportfolio/taburete-hs-336-hielos-del-sur/?$ /producto/taburete-hs-373/
+RedirectMatch 301 ^/cubeportfolio/taburete-hs-506/?$ /producto/taburete-hs-816/
+RedirectMatch 301 ^/cubeportfolio/taburete-hs-707/?$ /producto/taburete-hs-817/
+RedirectMatch 301 ^/cubeportfolio/taburete-hs-788-hielos-del-sur/?$ /producto/taburete-hs-817/
+RedirectMatch 301 ^/cubeportfolio/taburete-hs-9449/?$ /producto/taburete-hs-1799/
+RedirectMatch 301 ^/cubeportfolio/taburete-hs-9907/?$ /producto/taburete-hs-1799/
+RedirectMatch 301 ^/cubeportfolio/taburete-isy/?$ /producto/taburete-io/
+RedirectMatch 301 ^/cubeportfolio/taburete-piu/?$ /producto/taburete-io/
+RedirectMatch 301 ^/cubeportfolio/taburete-pop/?$ /producto/taburete-io/
+RedirectMatch 301 ^/cubeportfolio/taburete-up/?$ /producto/taburete-udd/
+RedirectMatch 301 ^/cubeportfolio/banca-circular/?$ /catalogo/bancas/
+RedirectMatch 301 ^/cubeportfolio/banca-curva-maec/?$ /catalogo/bancas/
+RedirectMatch 301 ^/cubeportfolio/banca-curva/?$ /catalogo/bancas/
+RedirectMatch 301 ^/cubeportfolio/banca-jardinera/?$ /catalogo/bancas/
+RedirectMatch 301 ^/cubeportfolio/base-hs-009-lf/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio/hs-002/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio/mesa-cubierta-topali-tredonda/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio/mesa-cubierta-topalit-cuadrada-base-de-disco/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio/mesa-cubierta-topalit-cuadrada/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio/mesa-cubierta-topalit-redonda-base/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio/mesa-cubierta-topalit-redonda/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio/poltron/?$ /catalogo/sillones/
+RedirectMatch 301 ^/cubeportfolio/silla-alice/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-angel-2/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-angel-3/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-angel/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-bella-intreciata/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-chill/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-chloe-amour-hielos-del-sur/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-daniela/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-danna/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-de-madera/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-duna/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-elba/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-eliana-119/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-eventos/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-fresh/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-icons-metalica/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-imperio/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-lore/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-maxi-diva/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-vela/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/silla-zebra/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio/sillon-bob-individual/?$ /catalogo/sillones/
+RedirectMatch 301 ^/cubeportfolio/sillon-ciudad-art-112-b-madera/?$ /catalogo/sillones/
+RedirectMatch 301 ^/cubeportfolio/sillon-juga/?$ /catalogo/sillones/
+RedirectMatch 301 ^/cubeportfolio/sillon-onda/?$ /catalogo/sillones/
+RedirectMatch 301 ^/cubeportfolio/taburete-0448/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio/taburete-817/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio/taburete-diablito/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio/taburete-diva/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio/taburete-hs-225-hielos-del-sur/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio/taburete-hs-8810-2-hielos-del-sur/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio/taburete-hs-955/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio/taburete-zebra/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio/taburete-zeta/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio/taburete813/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio_category/silla/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio_category/mesa/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio_category/sillon/?$ /catalogo/sillones/
+RedirectMatch 301 ^/cubeportfolio_category/taburete/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio_category/banca/?$ /catalogo/bancas/
+RedirectMatch 301 ^/cubeportfolio_category/bases/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio_category/cubiertas/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio_category/cubierta/?$ /catalogo/mesas/
+
+# ---------- 301 categorías y páginas ----------
+RedirectMatch 301 ^/sillas/?$ /catalogo/sillas/
+RedirectMatch 301 ^/sillas-filtros/?$ /catalogo/sillas/
+RedirectMatch 301 ^/mesas/?$ /catalogo/mesas/
+RedirectMatch 301 ^/sillones/?$ /catalogo/sillones/
+RedirectMatch 301 ^/taburetes/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/bancas/?$ /catalogo/bancas/
+RedirectMatch 301 ^/basureros/?$ /catalogo/bancas/
+RedirectMatch 301 ^/jardineras/?$ /catalogo/bancas/
+RedirectMatch 301 ^/cubeportfolio_category/silla/?$ /catalogo/sillas/
+RedirectMatch 301 ^/cubeportfolio_category/mesa/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio_category/sillon/?$ /catalogo/sillones/
+RedirectMatch 301 ^/cubeportfolio_category/taburete/?$ /catalogo/taburetes/
+RedirectMatch 301 ^/cubeportfolio_category/banca/?$ /catalogo/bancas/
+RedirectMatch 301 ^/cubeportfolio_category/bases/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio_category/cubiertas/?$ /catalogo/mesas/
+RedirectMatch 301 ^/cubeportfolio_category/cubierta/?$ /catalogo/mesas/
+RedirectMatch 301 ^/productos/?$ /catalogo/
+RedirectMatch 301 ^/trabajos-realizados/?$ /proyectos/
+RedirectMatch 301 ^/trabajos-especiales/?$ /trabajos/
+RedirectMatch 301 ^/servicios/?$ /trabajos/
+RedirectMatch 301 ^/cafeterias-y-restaurant/?$ /
+RedirectMatch 301 ^/cafeterias-restaurantes/?$ /
+RedirectMatch 301 ^/comedores/?$ /
+RedirectMatch 301 ^/patios-de-comida/?$ /
+
+# ---------- Basura del WP viejo: 410 Gone (nunca 301 a la portada) ----------
+RedirectMatch 410 ^/the_grid/.*$
+RedirectMatch 410 ^/cubeportfolio/.*$
+RedirectMatch 410 ^/(feed|comments/feed|xmlrpc\.php|wp-login\.php|wp-json(/.*)?)$
+# wp-content/uploads/ SE CONSERVA en el servidor (imágenes indexadas en Google Imágenes)
+RedirectMatch 410 ^/wp-(admin|includes)/.*$
+RedirectMatch 410 ^/wp-content/(plugins|themes|cache)/.*$
+RedirectMatch 410 ^/(silla-verde|silla-roja|mesa-prueba|mesa-prueba-2)/?$
