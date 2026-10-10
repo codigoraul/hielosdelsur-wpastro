@@ -25,7 +25,7 @@ const {
 } = Astro.props;
 ---
 
-<div class="hds-chat" id="hdsChat" data-vertical={vertical} data-endpoint={`${base}/chat.php`} data-avatar={`${base}/favicon.svg`}>
+<div class="hds-chat" id="hdsChat" data-vertical={vertical} data-endpoint={`${base}/chat.php`} data-avatar={`${base}/chat-avatar.svg`}>
   <!-- Botón flotante -->
   <button type="button" class="hds-chat-bubble" id="hdsChatBubble" aria-label="Abrir chat con IA">
     <span class="hds-chat-bubble-icon">
@@ -43,7 +43,7 @@ const {
   <div class="hds-chat-panel" id="hdsChatPanel" role="dialog" aria-label="Chat de demostración con inteligencia artificial">
     <div class="hds-chat-header">
       <div class="hds-chat-avatar">
-        <img src={`${base}/favicon.svg`} alt="" width="42" height="42">
+        <img src={`${base}/chat-avatar.svg`} alt="" width="42" height="42">
       </div>
       <span class="hds-chat-sep"></span>
       <div class="hds-chat-header-text">
@@ -57,7 +57,7 @@ const {
 
     <div class="hds-chat-body" id="hdsChatBody">
       <div class="hds-chat-row hds-chat-row-bot">
-        <div class="hds-chat-avatar-sm"><img src={`${base}/favicon.svg`} alt="" width="28" height="28"></div>
+        <div class="hds-chat-avatar-sm"><img src={`${base}/chat-avatar.svg`} alt="" width="28" height="28"></div>
         <div class="hds-chat-bubble-wrap">
           <div class="hds-chat-msg hds-chat-msg-bot">{welcomeMessage}</div>
           <span class="hds-chat-time" data-now></span>
@@ -73,6 +73,7 @@ const {
 
     <p class="hds-chat-disclaimer">{disclaimer}</p>
     <p class="hds-chat-privacy">Si nos dejas tu nombre y contacto, los usamos solo para responderte. Puedes pedir que los eliminemos cuando quieras.</p>
+    <p class="hds-chat-credit"><a href="https://chatbotia.cl/?utm_source=hielosdelsur&utm_medium=chat&utm_campaign=powered-by" target="_blank" rel="noopener">Chatbot con IA por chatbotia.cl</a></p>
 
     <form class="hds-chat-input-row" id="hdsChatForm">
       <textarea id="hdsChatInput" placeholder="Escribe tu mensaje acá" autocomplete="off" rows="1"></textarea>
@@ -498,6 +499,22 @@ const {
     flex-shrink: 0;
   }
 
+  .hds-chat-credit {
+    margin: 0;
+    padding: 2px 16px 8px;
+    text-align: center;
+    font-size: 0.64rem;
+    background: #ffffff;
+  }
+  .hds-chat-credit a {
+    color: #b0b0b6;
+    text-decoration: none;
+  }
+  .hds-chat-credit a:hover {
+    color: #8B7355;
+    text-decoration: underline;
+  }
+
   @media (max-width: 480px) {
     .hds-chat {
       bottom: 16px;
@@ -520,7 +537,7 @@ const {
     const input = document.getElementById('hdsChatInput');
 
     if (!root || !bubble || !body || !form || !input) return;
-    const AVATAR = root.dataset.avatar || '/favicon.svg';
+    const AVATAR = root.dataset.avatar || '/chat-avatar.svg';
     const ENDPOINT = root.dataset.endpoint || '/chat.php';
 
     function scrollToEnd() {
@@ -546,7 +563,7 @@ const {
       if (!isUser) {
         const avatar = document.createElement('div');
         avatar.className = 'hds-chat-avatar-sm';
-        avatar.innerHTML = '<img src={`${base}/favicon.svg`} alt="" width="28" height="28">';
+        avatar.innerHTML = '<img src={`${base}/chat-avatar.svg`} alt="" width="28" height="28">';
         row.appendChild(avatar);
       }
 
@@ -576,7 +593,7 @@ const {
 
       const avatar = document.createElement('div');
       avatar.className = 'hds-chat-avatar-sm';
-      avatar.innerHTML = '<img src={`${base}/favicon.svg`} alt="" width="28" height="28">';
+      avatar.innerHTML = '<img src={`${base}/chat-avatar.svg`} alt="" width="28" height="28">';
 
       const typing = document.createElement('div');
       typing.className = 'hds-chat-typing';
