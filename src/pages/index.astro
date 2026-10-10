@@ -5,7 +5,7 @@ import { getYoastSEO } from '../lib/wordpress.js';
 
 // Obtener datos de Yoast SEO para la página de inicio
 const yoastData = await getYoastSEO('inicio');
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const categorias = [
   { label: 'Sillas',    href: `${base}/catalogo/sillas`,    img: './images/sillas.jpg',    light: true },
@@ -48,22 +48,22 @@ const categorias = [
       <div class="servicios-grid">
         {[
           {
-            img: 'https://hielosdelsur.cl/wp-content/uploads/2016/08/atencionper-e1504476990467.jpg',
+            img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2016/08/atencionper-e1504476990467.jpg',
             title: 'ATENCIÓN PERSONALIZADA',
             desc: 'Contamos con personal altamente capacitado brindando el mejor asesoramiento.',
           },
           {
-            img: 'https://hielosdelsur.cl/wp-content/uploads/2016/08/entrega-e1504477012196.jpg',
+            img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2016/08/entrega-e1504477012196.jpg',
             title: 'SERVICIO DE ENTREGA',
             desc: 'Realizamos entregas e instalaciones en todo Chile.',
           },
           {
-            img: 'https://hielosdelsur.cl/wp-content/uploads/2018/10/surtido-e1504477034392.jpg',
+            img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2018/10/surtido-e1504477034392.jpg',
             title: 'SURTIDO Y STOCK',
             desc: 'Disponemos de grandes superficies de fabricación y almacenamiento, simplificando la reposición.',
           },
           {
-            img: 'https://hielosdelsur.cl/wp-content/uploads/2016/08/trabajosespecial-e1504477057708.jpg',
+            img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2016/08/trabajosespecial-e1504477057708.jpg',
             title: 'TRABAJOS ESPECIALES',
             desc: 'Nos especializamos en realizar proyectos especiales fuera del circuito comercial.',
           },
@@ -92,18 +92,18 @@ const categorias = [
             {/* Página 1 — 12 logos */}
             <div class="logos-page">
               {[
-                { nombre: 'UNIACC',         img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/uniacc.jpg' },
-                { nombre: 'Tavelli',         img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/tavelli.jpg' },
-                { nombre: 'Subway',          img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/subway.jpg' },
-                { nombre: 'Santander',       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/santander.jpg' },
-                { nombre: 'Paseo Quilín',    img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/paseo-quilin.jpg' },
-                { nombre: 'Open Mall Plaza', img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/open-mall-plaza.jpg' },
-                { nombre: 'UC Católica',     img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/ucatolica.jpg' },
-                { nombre: 'Tarragona',       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/tarragona.jpg' },
-                { nombre: 'Sodexo',          img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/sodexo.jpg' },
-                { nombre: 'Pollo Stop',      img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/pollo-stop.jpg' },
-                { nombre: 'Parque Arauco',   img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/parquearauco.jpg' },
-                { nombre: 'Los Pelambres',   img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/minera-lospelambres-25.jpg' },
+                { nombre: 'UNIACC',         img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/uniacc.jpg' },
+                { nombre: 'Tavelli',         img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/tavelli.jpg' },
+                { nombre: 'Subway',          img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/subway.jpg' },
+                { nombre: 'Santander',       img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/santander.jpg' },
+                { nombre: 'Paseo Quilín',    img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/paseo-quilin.jpg' },
+                { nombre: 'Open Mall Plaza', img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/open-mall-plaza.jpg' },
+                { nombre: 'UC Católica',     img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/ucatolica.jpg' },
+                { nombre: 'Tarragona',       img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/tarragona.jpg' },
+                { nombre: 'Sodexo',          img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/sodexo.jpg' },
+                { nombre: 'Pollo Stop',      img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/pollo-stop.jpg' },
+                { nombre: 'Parque Arauco',   img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/parquearauco.jpg' },
+                { nombre: 'Los Pelambres',   img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/minera-lospelambres-25.jpg' },
               ].map(c => (
                 <div class="logo-item">
                   <img src={c.img} alt={c.nombre} loading="lazy" />
@@ -113,18 +113,18 @@ const categorias = [
             {/* Página 2 — 12 logos */}
             <div class="logos-page">
               {[
-                { nombre: 'Minera Escondida', img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/minera-escondida.jpg' },
-                { nombre: 'BHP Billiton',     img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/minera-bhpbilliton.jpg' },
-                { nombre: 'Anglo American',   img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/minera-angloamerica.jpg' },
-                { nombre: "McDonald's",       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mcdonalds.jpg' },
-                { nombre: 'Mall Plaza',       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mallplaza.jpg' },
-                { nombre: 'Mall Sport',       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mall-sport.jpg' },
-                { nombre: 'Mall del Centro',  img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mall-del-centro.jpg' },
-                { nombre: 'Líder',            img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/lider.jpg' },
-                { nombre: 'Le Fournil',       img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/LeFournil.jpg' },
-                { nombre: 'Latam',            img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/latam.jpg' },
-                { nombre: 'Indisa',           img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/indisa.jpg' },
-                { nombre: 'Inacap',           img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/inacap.jpg' },
+                { nombre: 'Minera Escondida', img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/minera-escondida.jpg' },
+                { nombre: 'BHP Billiton',     img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/minera-bhpbilliton.jpg' },
+                { nombre: 'Anglo American',   img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/minera-angloamerica.jpg' },
+                { nombre: "McDonald's",       img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/mcdonalds.jpg' },
+                { nombre: 'Mall Plaza',       img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/mallplaza.jpg' },
+                { nombre: 'Mall Sport',       img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/mall-sport.jpg' },
+                { nombre: 'Mall del Centro',  img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/mall-del-centro.jpg' },
+                { nombre: 'Líder',            img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/lider.jpg' },
+                { nombre: 'Le Fournil',       img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/LeFournil.jpg' },
+                { nombre: 'Latam',            img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/latam.jpg' },
+                { nombre: 'Indisa',           img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/indisa.jpg' },
+                { nombre: 'Inacap',           img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/inacap.jpg' },
               ].map(c => (
                 <div class="logo-item">
                   <img src={c.img} alt={c.nombre} loading="lazy" />
@@ -134,18 +134,18 @@ const categorias = [
             {/* Página 3 — 4 logos + 8 rellenos para mantener la cuadrícula */}
             <div class="logos-page">
               {[
-                { nombre: 'Falabella',      img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/falabella.jpg' },
-                { nombre: 'Espacio Urbano', img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/espacio-urbano.jpg' },
-                { nombre: 'El Colorado',    img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/elColorado.jpg' },
-                { nombre: 'Aramark',        img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/aramark.jpg' },
-                { nombre: 'UNIACC',         img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/uniacc.jpg' },
-                { nombre: 'Tavelli',        img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/tavelli.jpg' },
-                { nombre: 'Subway',         img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/subway.jpg' },
-                { nombre: 'Santander',      img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/santander.jpg' },
-                { nombre: 'Mall Plaza',     img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mallplaza.jpg' },
-                { nombre: 'Falabella',      img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/falabella.jpg' },
-                { nombre: "McDonald's",     img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/mcdonalds.jpg' },
-                { nombre: 'Latam',          img: 'https://hielosdelsur.cl/wp-content/uploads/2017/08/latam.jpg' },
+                { nombre: 'Falabella',      img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/falabella.jpg' },
+                { nombre: 'Espacio Urbano', img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/espacio-urbano.jpg' },
+                { nombre: 'El Colorado',    img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/elColorado.jpg' },
+                { nombre: 'Aramark',        img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/aramark.jpg' },
+                { nombre: 'UNIACC',         img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/uniacc.jpg' },
+                { nombre: 'Tavelli',        img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/tavelli.jpg' },
+                { nombre: 'Subway',         img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/subway.jpg' },
+                { nombre: 'Santander',      img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/santander.jpg' },
+                { nombre: 'Mall Plaza',     img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/mallplaza.jpg' },
+                { nombre: 'Falabella',      img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/falabella.jpg' },
+                { nombre: "McDonald's",     img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/mcdonalds.jpg' },
+                { nombre: 'Latam',          img: 'https://hielosdelsur.cl/admin/wp-content/uploads/2017/08/latam.jpg' },
               ].map(c => (
                 <div class="logo-item">
                   <img src={c.img} alt={c.nombre} loading="lazy" />
