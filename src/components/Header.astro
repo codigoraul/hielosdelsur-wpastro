@@ -59,7 +59,7 @@ const catalogItems = [
         {navItems.map((item) => (
           item.hasDropdown ? (
             <div class="nav-parent" style="position:relative">
-              <button style="display:flex; align-items:center; gap:4px; padding:0.5rem 0.25rem; font-family:'Inter',sans-serif; font-size:0.8rem; font-weight:400; letter-spacing:0.08em; text-transform:uppercase; color:#57534e; background:none; border:none; cursor:pointer; white-space:nowrap" class="hover:text-[#8B7355] transition-colors">
+              <button type="button" class="nav-cat-btn" aria-haspopup="true" aria-expanded="false" style="display:flex; align-items:center; gap:4px; padding:0.5rem 0.25rem; font-family:'Inter',sans-serif; font-size:0.8rem; font-weight:400; letter-spacing:0.08em; text-transform:uppercase; color:#57534e; background:none; border:none; cursor:pointer; white-space:nowrap" class="hover:text-[#8B7355] transition-colors">
                 {item.label}
                 <svg xmlns="http://www.w3.org/2000/svg" class="nav-chevron" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
@@ -160,14 +160,18 @@ const catalogItems = [
     #menu-btn         { display: none !important; }
   }
 
-  .nav-parent:hover .nav-dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0s;
+  .nav-parent:hover .nav-dropdown,
+  .nav-parent.is-open .nav-dropdown,
+  .nav-parent:focus-within .nav-dropdown {
+    /* !important: el .nav-dropdown trae opacity/visibility en style="" inline, que le gana a cualquier regla de clase */
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0s !important;
   }
   .nav-chevron { transition: transform 0.2s; }
-  .nav-parent:hover .nav-chevron { transform: rotate(180deg); }
+  .nav-parent:hover .nav-chevron,
+  .nav-parent.is-open .nav-chevron { transform: rotate(180deg); }
 </style>
 
 <script>
@@ -196,6 +200,29 @@ const catalogItems = [
   btn?.addEventListener('click', openMenu);
   closeBtn?.addEventListener('click', closeMenu);
   overlay?.addEventListener('click', closeMenu);
+
+  // Desplegable Catálogo (desktop): abre/cierra con clic o toque, además del hover
+  document.querySelectorAll('.nav-cat-btn').forEach(b => {
+    const parent = b.closest('.nav-parent');
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const abierto = parent.classList.toggle('is-open');
+      b.setAttribute('aria-expanded', String(abierto));
+    });
+  });
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.nav-parent.is-open').forEach(p => {
+      p.classList.remove('is-open');
+      p.querySelector('.nav-cat-btn')?.setAttribute('aria-expanded', 'false');
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.nav-parent.is-open').forEach(p => {
+      p.classList.remove('is-open');
+      p.querySelector('.nav-cat-btn')?.setAttribute('aria-expanded', 'false');
+    });
+  });
 
   // Acordeón catálogo
   document.querySelectorAll('.mob-cat-btn').forEach(btn => {

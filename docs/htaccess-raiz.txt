@@ -11,7 +11,7 @@
 </IfModule>
 # php -- END cPanel-generated handler, do not edit
 
-DirectoryIndex index.html
+DirectoryIndex index.html index.php
 Options -Indexes
 ErrorDocument 404 /404.html
 ErrorDocument 503 /mantenimiento.html

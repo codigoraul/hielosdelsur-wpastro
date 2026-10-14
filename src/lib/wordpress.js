@@ -1,5 +1,17 @@
 const WP_URL = 'https://hielosdelsur.cl/admin';
 
+// WordPress entrega los títulos con entidades HTML (ej. "&#8211;" en vez de "–"); las decodificamos
+const ENTIDADES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00a0', ndash: '–', mdash: '—', hellip: '…' };
+function decodeEntities(str = '') {
+  return String(str)
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&([a-z]+);/gi, (m, n) => ENTIDADES[n.toLowerCase()] ?? m);
+}
+
+// Imágenes que apuntan al sitio de pruebas antiguo (/clon/) ya no existen: se descartan
+const imagenVigente = (u) => typeof u === 'string' && u && !u.includes('/clon/');
+
 // Obtener datos de Yoast SEO para una página
 export async function getYoastSEO(slug) {
   try {
@@ -90,7 +102,7 @@ export async function getGaleria(tipoSlug = '', catSlug = '') {
     return {
       id:          p.id,
       slug:        p.slug || '',
-      titulo:      p.title?.rendered || '',
+      titulo:      decodeEntities(p.title?.rendered || ''),
       imagen:      p.imagen_url || '',
       galeria:     p.meta?.galeria_urls || [],
       categoria:   cat?.name || '',
@@ -141,7 +153,7 @@ export async function getProductos(categoriaSlug = '') {
     return {
       id: p.id,
       slug: p.slug,
-      titulo: p.title?.rendered || '',
+      titulo: decodeEntities(p.title?.rendered || ''),
       categoria: subterm?.name || '',
       articulo: p.meta?.articulo || '',
       procedencia: p.meta?.procedencia || '',
@@ -154,7 +166,7 @@ export async function getProductos(categoriaSlug = '') {
         try { return JSON.parse(p.meta?.caracteristicas || '[]'); }
         catch { return []; }
       })(),
-      galeria: p.galeria_urls || [],
+      galeria: (p.galeria_urls || []).filter(imagenVigente),
     };
   });
 }

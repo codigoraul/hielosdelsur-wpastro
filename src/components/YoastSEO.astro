@@ -31,6 +31,9 @@ const {
 function limpiarTitulo(t: string | undefined) {
   if (!t) return t;
   return t
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&ndash;/g, '–')
+    .replace(/&amp;/g, '&')
     .replace(/\s+archivos\s*[-–—]\s*hielosdelsur-astro$/i, ' — Hielos del Sur')
     .replace(/\s*[-–—]\s*hielosdelsur-astro$/i, ' — Hielos del Sur');
 }
