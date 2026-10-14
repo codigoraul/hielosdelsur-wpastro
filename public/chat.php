@@ -25,7 +25,7 @@ date_default_timezone_set('America/Santiago');
 // ===================== CONFIGURACIÓN =====================
 const GEMINI_MODEL   = 'gemini-3.6-flash';       // modelo principal
 const GEMINI_FALLBACK = 'gemini-3.5-flash-lite'; // si el principal falla o demora, se prueba este
-const NOTIFY_EMAIL   = 'codigoraul@gmail.com'; // a quién llegan los contactos y avisos (cambiar a ventas@hielosdelsur.cl al entregar)
+const NOTIFY_EMAIL   = 'ventas@hielosdelsur.cl, codigoraul@gmail.com'; // a quién llegan los contactos y avisos (separar con coma). Período de prueba: se envía a ambos; después dejar solo ventas@hielosdelsur.cl
 const SITE_NAME      = 'hielosdelsur.cl';
 const MONTHLY_LIMIT  = 1000;  // respuestas de IA al mes (0 = sin límite). Plan Pymes: 1000, Empresas: 2000
 const WARN_AT        = 0.8;   // aviso por correo al llegar a este % del límite

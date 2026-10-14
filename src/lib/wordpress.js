@@ -9,6 +9,9 @@ function decodeEntities(str = '') {
     .replace(/&([a-z]+);/gi, (m, n) => ENTIDADES[n.toLowerCase()] ?? m);
 }
 
+// Errores de tipeo conocidos en los títulos cargados en WordPress (corregir también allá cuando se pueda)
+const corregirTitulo = (t) => t.replace(/\bBansejero\b/g, 'Bandejero').replace(/\bbansejero\b/g, 'bandejero');
+
 // Imágenes que apuntan al sitio de pruebas antiguo (/clon/) ya no existen: se descartan
 const imagenVigente = (u) => typeof u === 'string' && u && !u.includes('/clon/');
 
@@ -102,7 +105,7 @@ export async function getGaleria(tipoSlug = '', catSlug = '') {
     return {
       id:          p.id,
       slug:        p.slug || '',
-      titulo:      decodeEntities(p.title?.rendered || ''),
+      titulo:      corregirTitulo(decodeEntities(p.title?.rendered || '')),
       imagen:      p.imagen_url || '',
       galeria:     p.meta?.galeria_urls || [],
       categoria:   cat?.name || '',
