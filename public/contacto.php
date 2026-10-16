@@ -10,6 +10,7 @@ date_default_timezone_set('America/Santiago');
 
 // ===================== CONFIGURACIÓN =====================
 const NOTIFY_EMAIL = 'codigoraul@gmail.com'; // PRUEBA: solo Raul. Al terminar, cambiar a 'ventas@hielosdelsur.cl, codigoraul@gmail.com' o solo ventas
+const DEBUG        = true; // TEMPORAL: muestra la causa del error en la respuesta. Poner en false al terminar las pruebas.
 const SITE_NAME    = 'hielosdelsur.cl';
 const RATE_LIMIT   = 5;    // envíos máximos por IP...
 const RATE_WINDOW  = 600;  // ...en esta ventana de segundos (10 min)
@@ -75,6 +76,21 @@ $headers = "From: " . SITE_NAME . " <no-reply@{$host}>\r\n"
          . "Reply-To: " . oneLine($nombre) . " <" . oneLine($email) . ">\r\n"
          . "Content-Type: text/plain; charset=UTF-8\r\n";
 
-$ok = @mail(NOTIFY_EMAIL, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers);
-if (!$ok) out(false, 'No se pudo enviar el mensaje. Intenta nuevamente o escríbenos por WhatsApp.', 500);
+$encSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
+// 1) con remitente de sobre (-f) del dominio del sitio, que es lo que exigen la mayoría de los hostings cPanel
+$ok = @mail(NOTIFY_EMAIL, $encSubject, $body, $headers, '-fno-reply@' . $host);
+$err = $ok ? '' : (error_get_last()['message'] ?? 'mail() devolvió false');
+// 2) si falla, se reintenta sin -f
+if (!$ok) {
+    $ok = @mail(NOTIFY_EMAIL, $encSubject, $body, $headers);
+    if (!$ok) $err .= ' | sin -f: ' . (error_get_last()['message'] ?? 'mail() devolvió false');
+}
+if (!$ok) {
+    error_log('[contacto.php] ' . $err . ' | disable_functions=' . ini_get('disable_functions') . ' | sendmail_path=' . ini_get('sendmail_path'));
+    $res = ['success' => false, 'message' => 'No se pudo enviar el mensaje. Intenta nuevamente o escríbenos por WhatsApp.'];
+    if (DEBUG) $res['debug'] = $err . ' | disable_functions=' . ini_get('disable_functions') . ' | sendmail_path=' . ini_get('sendmail_path') . ' | php=' . PHP_VERSION;
+    http_response_code(500);
+    echo json_encode($res, JSON_UNESCAPED_UNICODE);
+    exit;
+}
 out(true, 'Mensaje enviado.');
