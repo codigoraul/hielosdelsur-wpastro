@@ -82,7 +82,7 @@ $html = '<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="
   . '<body style="margin:0;padding:0;background:#f3f1ee;font-family:Arial,Helvetica,sans-serif">'
   . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f1ee;padding:24px 12px"><tr><td align="center">'
   . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:10px;overflow:hidden">'
-  . '<tr><td style="background:#1f5a8a;padding:22px 28px;color:#ffffff"><div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85">' . $e(SITE_NAME) . ' &middot; Sitio web</div>'
+  . '<tr><td style="background:#3a3d42;padding:22px 28px;color:#ffffff"><div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#ffffff"><a href="https://' . $e(SITE_NAME) . '" style="color:#ffffff;text-decoration:none">' . $e(SITE_NAME) . '</a> &middot; Sitio web</div>'
   . '<div style="font-size:21px;font-weight:bold;margin-top:4px">Formulario de contacto</div></td></tr>'
   . '<tr><td style="padding:24px 28px 8px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">'
   . $fila('Nombre', $e($nombre))
