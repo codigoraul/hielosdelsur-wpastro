@@ -26,3 +26,6 @@ pnpm-debug.log*
 # Chat IA
 public/gemini-key.php
 public/chat-data/
+
+# Credenciales SMTP (la real vive solo en el servidor)
+public/smtp-config.php

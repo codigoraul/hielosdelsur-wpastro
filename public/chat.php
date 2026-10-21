@@ -18,6 +18,7 @@
  *   <?php $GEMINI_API_KEY = 'TU_KEY';   (o $apiKey / $api_key)
  */
 
+require_once __DIR__ . '/mail-smtp.php';
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 date_default_timezone_set('America/Santiago');
@@ -25,7 +26,7 @@ date_default_timezone_set('America/Santiago');
 // ===================== CONFIGURACIÓN =====================
 const GEMINI_MODEL   = 'gemini-3.6-flash';       // modelo principal
 const GEMINI_FALLBACK = 'gemini-3.5-flash-lite'; // si el principal falla o demora, se prueba este
-const NOTIFY_EMAIL   = 'ventas@hielosdelsur.cl, codigoraul@gmail.com'; // a quién llegan los contactos y avisos (separar con coma). Período de prueba: se envía a ambos; después dejar solo ventas@hielosdelsur.cl
+const NOTIFY_EMAIL   = 'ventas@hielosdelsur.cl, codigoraul@gmail.com'; // PRUEBA: llega a ventas y a Raul. Luego dejar solo ventas@hielosdelsur.cl
 const SITE_NAME      = 'hielosdelsur.cl';
 const MONTHLY_LIMIT  = 1000;  // respuestas de IA al mes (0 = sin límite). Plan Pymes: 1000, Empresas: 2000
 const WARN_AT        = 0.8;   // aviso por correo al llegar a este % del límite
@@ -55,11 +56,26 @@ function ensureDataDir() {
     if (!is_file($idx)) @file_put_contents($idx, '');
 }
 
-function sendMail($subject, $body) {
-    $host = preg_replace('/[^a-z0-9.\-]/i', '', $_SERVER['HTTP_HOST'] ?? SITE_NAME);
-    $headers = "From: Asistente Hielos del Sur <no-reply@{$host}>\r\n"
-             . "Content-Type: text/plain; charset=UTF-8\r\n";
-    @mail(NOTIFY_EMAIL, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers);
+function hdsEsc($v) { return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8'); }
+
+// Envoltorio HTML con la marca del sitio (estilos en línea, compatibles con Gmail/Outlook)
+function hdsEmailHtml($title, $innerHtml) {
+    return '<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+      . '<body style="margin:0;padding:0;background:#f3f1ee;font-family:Arial,Helvetica,sans-serif">'
+      . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f1ee;padding:24px 12px"><tr><td align="center">'
+      . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:10px;overflow:hidden">'
+      . '<tr><td style="background:#8b7355;padding:22px 28px;color:#ffffff"><div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85">' . hdsEsc(SITE_NAME) . ' &middot; Chat con IA</div>'
+      . '<div style="font-size:21px;font-weight:bold;margin-top:4px">' . hdsEsc($title) . '</div></td></tr>'
+      . '<tr><td style="padding:24px 28px">' . $innerHtml . '</td></tr>'
+      . '<tr><td style="background:#faf8f5;padding:14px 28px;font-size:12px;color:#8a8178">Enviado el ' . date('d-m-Y \a \l\a\s H:i') . ' por el asistente de ' . hdsEsc(SITE_NAME) . '.</td></tr>'
+      . '</table></td></tr></table></body></html>';
+}
+
+function sendMail($subject, $body, $html = '') {
+    if ($html === '') {
+        $html = hdsEmailHtml($subject, '<div style="font-size:15px;line-height:1.6;color:#2b2622;white-space:pre-wrap">' . hdsEsc($body) . '</div>');
+    }
+    hds_mail(NOTIFY_EMAIL, $subject, $body, '', $html);
 }
 
 // Solo POST
@@ -271,9 +287,27 @@ if ($notifyContact) {
     }
     if (!$history || end($history)['text'] !== $message) $lines[] = 'Visitante: ' . $message;
     if ($reply !== null) $lines[] = 'Asistente: ' . $reply;
-    sendMail('Nuevo contacto desde el chat de ' . SITE_NAME,
-        "Un visitante dejó sus datos en el chat.\n\nConversación:\n\n" . implode("\n\n", $lines)
-        . "\n\n---\nFecha: " . date('d-m-Y H:i'));
+    $plain = "Un visitante dejó sus datos en el chat.\n\nConversación:\n\n" . implode("\n\n", $lines)
+           . "\n\n---\nFecha: " . date('d-m-Y H:i');
+    // Datos de contacto detectados en lo que escribió el visitante
+    $visitorText = '';
+    foreach ($lines as $l) { if (strpos($l, 'Visitante: ') === 0) $visitorText .= ' ' . substr($l, 11); }
+    preg_match_all('/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}/i', $visitorText, $em);
+    preg_match_all('/(?:\+?56\s?)?9[\s\-]?\d{4}[\s\-]?\d{4}|\b\d{8,9}\b/', $visitorText, $ph);
+    $datos = '';
+    foreach (array_unique($em[0]) as $x) $datos .= '<div style="margin:2px 0">&#9993; <a href="mailto:' . hdsEsc($x) . '" style="color:#8b7355;font-weight:bold">' . hdsEsc($x) . '</a></div>';
+    foreach (array_unique($ph[0]) as $x) $datos .= '<div style="margin:2px 0">&#9742; <a href="tel:' . hdsEsc(preg_replace('/[^0-9+]/', '', $x)) . '" style="color:#8b7355;font-weight:bold">' . hdsEsc($x) . '</a></div>';
+    $inner = '<p style="margin:0 0 16px;font-size:15px;color:#2b2622">Un visitante dejó sus datos en el chat. Esta es la conversación:</p>';
+    if ($datos !== '') $inner .= '<div style="background:#f7f5f2;border-left:3px solid #8b7355;padding:12px 16px;margin-bottom:20px;font-size:15px;color:#2b2622"><div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8b7355;margin-bottom:6px">Datos de contacto</div>' . $datos . '</div>';
+    foreach ($lines as $l) {
+        $esVisitante = strpos($l, 'Visitante: ') === 0;
+        $txt = $esVisitante ? substr($l, 11) : substr($l, 11);
+        $inner .= '<div style="margin:0 0 12px;text-align:' . ($esVisitante ? 'left' : 'right') . '">'
+                . '<div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#8a8178;margin-bottom:3px">' . ($esVisitante ? 'Visitante' : 'Asistente IA') . '</div>'
+                . '<div style="display:inline-block;max-width:85%;text-align:left;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.5;white-space:pre-wrap;'
+                . ($esVisitante ? 'background:#efeae3;color:#2b2622' : 'background:#8b7355;color:#ffffff') . '">' . hdsEsc($txt) . '</div></div>';
+    }
+    sendMail('Nuevo contacto desde el chat de ' . SITE_NAME, $plain, hdsEmailHtml('Nuevo contacto desde el chat', $inner));
 }
 
 respond($reply);

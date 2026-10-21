@@ -4,13 +4,14 @@
  * Recibe POST (FormData) desde /contacto y responde JSON {success, message}.
  * Mismo formato que las últimas webs: campo trampa _gotcha, mail() y fetch.
  */
+require_once __DIR__ . '/mail-smtp.php';
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 date_default_timezone_set('America/Santiago');
 
 // ===================== CONFIGURACIÓN =====================
-const NOTIFY_EMAIL = 'codigoraul@gmail.com'; // PRUEBA: solo Raul. Al terminar, cambiar a 'ventas@hielosdelsur.cl, codigoraul@gmail.com' o solo ventas
-const DEBUG        = true; // TEMPORAL: muestra la causa del error en la respuesta. Poner en false al terminar las pruebas.
+const NOTIFY_EMAIL = 'ventas@hielosdelsur.cl, codigoraul@gmail.com'; // por ahora llega a ventas y a Raul; luego dejar solo ventas@hielosdelsur.cl
+const DEBUG        = false; // true muestra la causa del error en la respuesta (solo para pruebas)
 const SITE_NAME    = 'hielosdelsur.cl';
 const RATE_LIMIT   = 5;    // envíos máximos por IP...
 const RATE_WINDOW  = 600;  // ...en esta ventana de segundos (10 min)
@@ -64,7 +65,7 @@ $hits[] = $now;
 $host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? SITE_NAME);
 $host = preg_replace('/[^a-z0-9.\-]/i', '', $host);
 $host = preg_replace('/^www\./', '', $host);
-$subject = 'Nuevo mensaje de contacto — ' . oneLine($nombre);
+$subject = 'Formulario de contacto — ' . oneLine($nombre);
 $body = "Nuevo mensaje desde el formulario de " . SITE_NAME . "\n"
       . "Fecha: " . date('d-m-Y H:i') . "\n\n"
       . "Nombre:   $nombre\n"
@@ -72,23 +73,34 @@ $body = "Nuevo mensaje desde el formulario de " . SITE_NAME . "\n"
       . "Email:    $email\n"
       . "Teléfono: " . ($telefono ?: '-') . "\n\n"
       . "Mensaje:\n$mensaje\n";
-$headers = "From: " . SITE_NAME . " <no-reply@{$host}>\r\n"
-         . "Reply-To: " . oneLine($nombre) . " <" . oneLine($email) . ">\r\n"
-         . "Content-Type: text/plain; charset=UTF-8\r\n";
-
-$encSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
-// 1) con remitente de sobre (-f) del dominio del sitio, que es lo que exigen la mayoría de los hostings cPanel
-$ok = @mail(NOTIFY_EMAIL, $encSubject, $body, $headers, '-fno-reply@' . $host);
-$err = $ok ? '' : (error_get_last()['message'] ?? 'mail() devolvió false');
-// 2) si falla, se reintenta sin -f
+$e = function ($v) { return htmlspecialchars($v, ENT_QUOTES, 'UTF-8'); };
+$fila = function ($label, $valor) use ($e) {
+    return '<tr><td style="padding:10px 0;border-bottom:1px solid #dde6ee;width:110px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#1f5a8a;vertical-align:top">' . $label
+         . '</td><td style="padding:10px 0;border-bottom:1px solid #dde6ee;font-size:15px;color:#2b2622;vertical-align:top">' . $valor . '</td></tr>';
+};
+$html = '<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+  . '<body style="margin:0;padding:0;background:#f3f1ee;font-family:Arial,Helvetica,sans-serif">'
+  . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f1ee;padding:24px 12px"><tr><td align="center">'
+  . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:10px;overflow:hidden">'
+  . '<tr><td style="background:#1f5a8a;padding:22px 28px;color:#ffffff"><div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85">' . $e(SITE_NAME) . ' &middot; Sitio web</div>'
+  . '<div style="font-size:21px;font-weight:bold;margin-top:4px">Formulario de contacto</div></td></tr>'
+  . '<tr><td style="padding:24px 28px 8px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">'
+  . $fila('Nombre', $e($nombre))
+  . $fila('Empresa', $empresa !== '' ? $e($empresa) : '&mdash;')
+  . $fila('Email', '<a href="mailto:' . $e($email) . '" style="color:#1f5a8a">' . $e($email) . '</a>')
+  . $fila('Teléfono', $telefono !== '' ? '<a href="tel:' . $e(preg_replace('/[^0-9+]/', '', $telefono)) . '" style="color:#1f5a8a">' . $e($telefono) . '</a>' : '&mdash;')
+  . '</table></td></tr>'
+  . '<tr><td style="padding:8px 28px 4px"><div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#1f5a8a;margin-bottom:8px">Mensaje</div>'
+  . '<div style="background:#f1f6fa;border-left:3px solid #1f5a8a;padding:14px 16px;font-size:15px;line-height:1.55;color:#2b2622;white-space:pre-wrap">' . $e($mensaje) . '</div></td></tr>'
+  . '<tr><td style="padding:22px 28px 28px"><a href="mailto:' . $e($email) . '?subject=' . rawurlencode('Re: tu consulta en ' . SITE_NAME) . '" style="display:inline-block;background:#1f5a8a;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:6px;font-size:14px;font-weight:bold">Responder a ' . $e($nombre) . '</a></td></tr>'
+  . '<tr><td style="background:#faf8f5;padding:14px 28px;font-size:12px;color:#8a8178">Recibido el ' . date('d-m-Y \a \l\a\s H:i') . ' desde el formulario de ' . $e(SITE_NAME) . '. También puedes responder directamente a este correo.</td></tr>'
+  . '</table></td></tr></table></body></html>';
+$ok = hds_mail(NOTIFY_EMAIL, $subject, $body, oneLine($nombre) . ' <' . oneLine($email) . '>', $html);
+$err = $ok ? '' : ($GLOBALS['HDS_MAIL_ERR'] ?: 'falló el envío SMTP');
 if (!$ok) {
-    $ok = @mail(NOTIFY_EMAIL, $encSubject, $body, $headers);
-    if (!$ok) $err .= ' | sin -f: ' . (error_get_last()['message'] ?? 'mail() devolvió false');
-}
-if (!$ok) {
-    error_log('[contacto.php] ' . $err . ' | disable_functions=' . ini_get('disable_functions') . ' | sendmail_path=' . ini_get('sendmail_path'));
+    error_log('[contacto.php] ' . $err);
     $res = ['success' => false, 'message' => 'No se pudo enviar el mensaje. Intenta nuevamente o escríbenos por WhatsApp.'];
-    if (DEBUG) $res['debug'] = $err . ' | disable_functions=' . ini_get('disable_functions') . ' | sendmail_path=' . ini_get('sendmail_path') . ' | php=' . PHP_VERSION;
+    if (DEBUG) $res['debug'] = $err . ' | php=' . PHP_VERSION;
     http_response_code(500);
     echo json_encode($res, JSON_UNESCAPED_UNICODE);
     exit;

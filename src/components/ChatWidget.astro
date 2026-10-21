@@ -564,7 +564,7 @@ const {
       if (!isUser) {
         const avatar = document.createElement('div');
         avatar.className = 'hds-chat-avatar-sm';
-        avatar.innerHTML = '<img src={`${base}/chat-avatar.svg`} alt="" width="28" height="28">';
+        avatar.innerHTML = '<img src="' + AVATAR + '" alt="" width="28" height="28">';
         row.appendChild(avatar);
       }
 
@@ -594,7 +594,7 @@ const {
 
       const avatar = document.createElement('div');
       avatar.className = 'hds-chat-avatar-sm';
-      avatar.innerHTML = '<img src={`${base}/chat-avatar.svg`} alt="" width="28" height="28">';
+      avatar.innerHTML = '<img src="' + AVATAR + '" alt="" width="28" height="28">';
 
       const typing = document.createElement('div');
       typing.className = 'hds-chat-typing';
