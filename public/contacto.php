@@ -59,6 +59,25 @@ $mensaje  = clean($_POST['mensaje']  ?? '', 4000);
 if ($nombre === '' || $email === '' || $mensaje === '') out(false, 'Completa nombre, email y mensaje.', 422);
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) out(false, 'El email no es válido.', 422);
 
+// Filtro anti-spam: mensajes en inglés (ofertas de video, SEO, etc.) o con varios enlaces se descartan
+// en silencio (se responde "éxito" para que el bot no reintente) y no se envía ningún correo.
+function esSpam($texto) {
+    $t = mb_strtolower($texto, 'UTF-8');
+    $urls = preg_match_all('~(https?://|www\.)~i', $t);
+    $palabras = preg_split('/[^a-záéíóúñü]+/u', $t, -1, PREG_SPLIT_NO_EMPTY);
+    $en = ['the','and','you','your','our','we','for','with','that','this','have','has','are','can','just','hi','hello','video','videos','business','website','cost','price','please','visit','offer','seo','ranking','traffic','results','social','media','would','if','to','of','on','i','my','is','it','be','at','a'];
+    $es = ['el','la','los','las','de','que','y','en','un','una','por','para','con','es','mi','me','quiero','necesito','hola','buenas','cotizacion','cotización','silla','sillas','mesa','mesas','proyecto','favor','gracias','estimados','quisiera','muebles','mobiliario','precio','valor','su','se','lo','al','del','como','más','chair','chairs','table','tables','furniture','quote','buy','catalog','catalogue','order','stool','stools','bench','restaurant','santiago','chile'];
+    $ne = 0; $ns = 0;
+    foreach ($palabras as $w) {
+        if (in_array($w, $en, true)) $ne++;
+        if (in_array($w, $es, true)) $ns++;
+    }
+    if ($urls >= 2) return true;
+    if ($ne >= 6 && $ne > $ns * 2) return true;
+    return false;
+}
+if (esSpam($mensaje . ' ' . $empresa)) out(true, 'Mensaje enviado.');
+
 $hits[] = $now;
 @file_put_contents($rf, json_encode($hits), LOCK_EX);
 
