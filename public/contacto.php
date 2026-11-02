@@ -10,7 +10,7 @@ header('X-Content-Type-Options: nosniff');
 date_default_timezone_set('America/Santiago');
 
 // ===================== CONFIGURACIÓN =====================
-const NOTIFY_EMAIL = 'ventas@hielosdelsur.cl, codigoraul@gmail.com'; // por ahora llega a ventas y a Raul; luego dejar solo ventas@hielosdelsur.cl
+const NOTIFY_EMAIL = 'ventas@hielosdelsur.cl';
 const DEBUG        = false; // true muestra la causa del error en la respuesta (solo para pruebas)
 const SITE_NAME    = 'hielosdelsur.cl';
 const RATE_LIMIT   = 5;    // envíos máximos por IP...
