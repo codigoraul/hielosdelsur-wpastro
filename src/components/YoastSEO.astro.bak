@@ -1,0 +1,56 @@
+---
+interface Props {
+  yoastData?: any;
+}
+
+const { yoastData } = Astro.props;
+
+// Si no hay datos de Yoast, no renderizar nada
+if (!yoastData) {
+  return null;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  og_title,
+  og_description,
+  og_image,
+  og_type,
+  og_url,
+  twitter_card,
+  twitter_title,
+  twitter_description,
+  twitter_image,
+  robots,
+} = yoastData;
+---
+
+{title && <title>{title}</title>}
+{description && <meta name="description" content={description} />}
+{canonical && <link rel="canonical" href={canonical} />}
+
+<!-- Open Graph -->
+{og_title && <meta property="og:title" content={og_title} />}
+{og_description && <meta property="og:description" content={og_description} />}
+{og_type && <meta property="og:type" content={og_type} />}
+{og_url && <meta property="og:url" content={og_url} />}
+{og_image && og_image[0] && (
+  <>
+    <meta property="og:image" content={og_image[0].url} />
+    {og_image[0].width && <meta property="og:image:width" content={og_image[0].width} />}
+    {og_image[0].height && <meta property="og:image:height" content={og_image[0].height} />}
+  </>
+)}
+
+<!-- Twitter Card -->
+{twitter_card && <meta name="twitter:card" content={twitter_card} />}
+{twitter_title && <meta name="twitter:title" content={twitter_title} />}
+{twitter_description && <meta name="twitter:description" content={twitter_description} />}
+{twitter_image && <meta name="twitter:image" content={twitter_image} />}
+
+<!-- Robots -->
+{robots && Object.entries(robots).map(([key, value]) => (
+  value && <meta name={`robots:${key}`} content={String(value)} />
+))}
